@@ -1,0 +1,5 @@
+[LangName]
+English
+
+[TestText1]
+Test text 1 : P U S S Y F O R D
