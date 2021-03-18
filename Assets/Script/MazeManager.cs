@@ -7,6 +7,8 @@ public class MazeManager
     private int gridRow = 5;
     private int gridColumn = 5;
     private short[,] mazeField;
+    private float diffMaze = -3f;
+    private bool iscaled = false;
 
     private Vector2Int posStart;
     private Vector2Int posEnd;
@@ -16,13 +18,37 @@ public class MazeManager
         posStart = new Vector2Int(-1, -1);
         posEnd = new Vector2Int(-1, -1);
         mazeField = new short[gridRow,gridColumn];
-        for (int i = 0;i < gridRow ;i++)
+        for (int i = 0; i < gridRow; i++)
         {
-            for (int j = 0;j < gridColumn;j++)
+            for (int j = 0; j < gridColumn; j++)
             {
-                mazeField[i, j] = 0;
+                mazeField[i, j] = 15;
             }
         }
+
+        for (int i = 1; i < gridColumn - 1; i++)
+        {
+            mazeField[0 , i] = 14;
+        }
+        for (int i = 1; i < gridColumn - 1; i++)
+        {
+            mazeField[gridRow - 1, i] = 11;
+        }
+
+        for (int i = 1; i < gridRow - 1; i++)
+        {
+            mazeField[i, gridColumn - 1] = 13;
+        }
+        for (int i = 1; i < gridRow - 1; i++)
+        {
+            mazeField[i, 0] = 7;
+        }
+
+        mazeField[0, 0] = 6;
+        mazeField[0, gridColumn - 1] = 12;
+        mazeField[gridRow - 1, 0] = 3;
+        mazeField[gridRow - 1, gridColumn - 1] = 9;
+
     }
 
     public MazeManager()
@@ -39,6 +65,18 @@ public class MazeManager
         initMaze();
     }
 
+    public void forceSetMaze(short[,] maze)
+    {
+        iscaled = false;
+        for (int i = 0;i < gridRow;i++)
+        {
+            for (int j = 0;j < gridColumn;j++)
+            {
+                mazeField[i, j] = maze[i, j];
+            }
+        }
+    }
+
     public bool isPosInMaze(Vector2Int pos)
     {
         if (pos.x < 0 || pos.x >= gridRow)
@@ -52,9 +90,45 @@ public class MazeManager
         return true;
     }
 
+    public bool isPass(int row, int column, char dir = 'U')
+    {
+        if (!isPosInMaze(new Vector2Int(row, column)))
+        {
+            Debug.LogError("Maze : unknown position");
+            return false;
+        }
+
+        switch (dir)
+        {
+            case 'U':
+            case 'u':
+
+                return (mazeField[row, column] & 1) > 0;
+
+            case 'D':
+            case 'd':
+
+                return (mazeField[row, column] & 4) > 0;
+
+            case 'L':
+            case 'l':
+
+                return (mazeField[row, column] & 8) > 0;
+
+            case 'R':
+            case 'r':
+
+                return (mazeField[row, column] & 2) > 0;
+
+            default:
+                Debug.LogError("Maze : Moving Unknown Direction");
+                return false;
+        }
+    }
 
     public void toggleWall(int row, int column, char dir = 'U')
     {
+        iscaled = false;
         if (!isPosInMaze(new Vector2Int(row, column)))
         {
             Debug.LogError("Maze : Calling toggle oversize");
@@ -129,21 +203,24 @@ public class MazeManager
         posEnd = new Vector2Int(row, column);
     }
 
-    public float difficultyMaze()
+    private void difficultyMaze()
     {
+        iscaled = true;
         if (!isPosInMaze(posStart))
         {
-            return -1f;
+            diffMaze = -1f;
+            return;
         }
         if (!isPosInMaze(posEnd))
         {
-            return -2f;
+            diffMaze = -2f;
+            return;
         }
 
         bool[,] flg = new bool[gridRow, gridColumn];
 
         //BFS goes here
-        Queue<(int,int,int,int, char)> que = new Queue<(int, int, int, int, char)>();
+        Queue<(int, int, int, int, char)> que = new Queue<(int, int, int, int, char)>();
 
         que.Enqueue((posStart.x, posStart.y, 0, 0, '?'));
         flg[posStart.x, posStart.y] = true;
@@ -156,9 +233,10 @@ public class MazeManager
             int nowTurns = now.Item4;
             char nowDir = now.Item5;
 
-            if ( new Vector2Int(nowRow, nowColumn) == posEnd)
+            if (new Vector2Int(nowRow, nowColumn) == posEnd)
             {
-                return nowDistance + nowTurns * 2f;
+                diffMaze = nowDistance * 0.1f + nowTurns * 1.2f;
+                return;
             }
 
             //Left side
@@ -216,7 +294,158 @@ public class MazeManager
 
         }
 
-        return -3f;
+        diffMaze = -3f;
+        return;
+    }
+
+    public float getDifficultyMaze()
+    {
+        if (!iscaled)
+        {
+            difficultyMaze();
+        }
+        return diffMaze;
+    }
+
+    private string numToPic(int num)
+    {
+        switch(num)
+        {
+            case 0: return " ";
+            case 1: return "v";
+            case 2: return "<";
+            case 3: return "╚";
+            case 4: return "^";
+            case 5: return "║";
+            case 6: return "╔";
+            case 7: return "╠";
+            case 8: return ">";
+            case 9: return "╝";
+            case 10: return "═";
+            case 11: return "╩";
+            case 12: return "╗";
+            case 13: return "╣";
+            case 14: return "╦";
+            default: return "╬";
+        }
+    }
+
+    public override string ToString() {
+        string res = "";
+        for(int i = 0; i < gridRow; i++)
+        {
+            for(int j = 0; j < gridColumn; j++)
+            {
+                res += numToPic(mazeField[i, j]) + "";
+            }
+            res += "\n";
+        }
+        return res.TrimEnd();
+    }
+
+    private string shortToHex(short num)
+    {
+        switch (num)
+        {
+            case 0: return "0";
+            case 1: return "1";
+            case 2: return "2";
+            case 3: return "3";
+            case 4: return "4";
+            case 5: return "5";
+            case 6: return "6";
+            case 7: return "7";
+            case 8: return "8";
+            case 9: return "9";
+            case 10: return "A";
+            case 11: return "B";
+            case 12: return "C";
+            case 13: return "D";
+            case 14: return "E";
+            default: return "F";
+        }
+    }
+
+    private short hexToShort(char num)
+    {
+        switch (num)
+        {
+            case '0': return 0;
+            case '1': return 1;
+            case '2': return 2;
+            case '3': return 3;
+            case '4': return 4;
+            case '5': return 5;
+            case '6': return 6;
+            case '7': return 7;
+            case '8': return 8;
+            case '9': return 9;
+            case 'A': return 10;
+            case 'B': return 11;
+            case 'C': return 12;
+            case 'D': return 13;
+            case 'E': return 14;
+            case 'F': return 15;
+            default: return -1;
+        }
+    }
+
+    public string dumpMaze()
+    {
+        string dumping = "";
+        dumping += gridRow.ToString() + ';';
+        dumping += gridColumn.ToString() + ';';
+        dumping += posStart.x.ToString() + ';' + posStart.y.ToString() + ';';
+        dumping += posEnd.x.ToString() + ';' + posEnd.y.ToString() + ';';
+
+        for (int i = 0; i < gridRow; i++)
+        {
+            for(int j = 0; j < gridColumn; j++)
+            {
+                dumping += shortToHex(mazeField[i, j]);
+            }
+        }
+
+        return dumping;
+    }
+
+    public void loadMaze(string content)
+    {
+        string[] data = content.Trim().Split(';');
+
+        try
+        {
+            gridRow = System.Int16.Parse(data[0]);
+            gridColumn = System.Int16.Parse(data[1]);
+            setStart(System.Int16.Parse(data[2]), System.Int16.Parse(data[3]));
+            setEnd(System.Int16.Parse(data[4]), System.Int16.Parse(data[5]));
+        }
+        catch
+        {
+            Debug.LogError("Error during convert data back to maze");
+            gridRow = 5;
+            gridColumn = 5;
+            initMaze();
+            return;
+        }
+
+        for (int i = 0; i < gridRow; i++)
+        {
+            for (int j = 0; j < gridColumn; j++)
+            {
+                short d = hexToShort(data[6][i * gridColumn + j]);
+                if (d != -1)
+                {
+                    mazeField[i, j] = d;
+                }
+                else
+                {
+                    Debug.LogError("Error during convert data back to maze");
+                    initMaze();
+                    return;
+                }
+            }
+        }
     }
 
 }
