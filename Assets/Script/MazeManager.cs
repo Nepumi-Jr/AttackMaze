@@ -203,6 +203,16 @@ public class MazeManager
         posEnd = new Vector2Int(row, column);
     }
 
+    public Vector2Int getStart()
+    {
+        return posStart;
+    }
+
+    public Vector2Int getEnd()
+    {
+        return posEnd;
+    }
+
     private void difficultyMaze()
     {
         iscaled = true;
@@ -429,6 +439,8 @@ public class MazeManager
             return;
         }
 
+        mazeField = new short[gridRow, gridColumn];
+
         for (int i = 0; i < gridRow; i++)
         {
             for (int j = 0; j < gridColumn; j++)
@@ -446,6 +458,16 @@ public class MazeManager
                 }
             }
         }
+    }
+
+    public int getGridRow()
+    {
+        return gridRow;
+    }
+
+    public int getGridColumn()
+    {
+        return gridColumn;
     }
 
 }

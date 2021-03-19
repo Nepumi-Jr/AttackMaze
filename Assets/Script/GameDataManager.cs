@@ -11,6 +11,8 @@ public class GameDataManager
     protected static string timeStamp;
     protected static string phase;
 
+    static bool isLoaded = false;
+
     public GameDataManager()
     {
         timeStamp = new DateTimeOffset(DateTime.Now).ToString();
@@ -33,24 +35,32 @@ public class GameDataManager
     public static void loadGame()
     {
         string SAVE_PATH = Application.dataPath + "/data.fgm";
+        player1Maze = new MazeManager();
+        player2Maze = new MazeManager();
+        isLoaded = true;
 
-        try
-        {
-            string[] content = File.ReadAllLines(SAVE_PATH);
-            player1Maze.loadMaze(content[0].Replace("P1 Maze:", ""));
-            player2Maze.loadMaze(content[1].Replace("P2 Maze:", ""));
-            phase = content[2].Replace("phase:", "");
-            timeStamp = content[2].Replace("Last seen:", "");
-        }
-        catch
-        {
-            Debug.LogError("Error Durring Loading file ");
-        }
+        string[] content = File.ReadAllLines(SAVE_PATH);
+        player1Maze.loadMaze(content[0].Replace("P1 Maze:", ""));
+        player2Maze.loadMaze(content[1].Replace("P2 Maze:", ""));
+        phase = content[2].Replace("phase:", "");
+        timeStamp = content[2].Replace("Last seen:", "");
     }
 
     public static void setPhase(string phasee)
     {
         phase = phasee;
+    }
+
+    public static int getRowMaze()
+    {
+        if (!isLoaded) loadGame();
+        return player1Maze.getGridRow();
+    }
+
+    public static int getColumnMaze()
+    {
+        if (!isLoaded) loadGame();
+        return player1Maze.getGridColumn();
     }
 
 }
