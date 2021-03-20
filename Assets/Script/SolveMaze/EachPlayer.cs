@@ -7,14 +7,15 @@ public class EachPlayer : MonoBehaviour
 
     public int player = 1;
     public bool isPlayable = true;
+    public Color mainColor;
     int rowMaze;
     int columnMaze;
 
     float fieldWidth;
     float fieldHeight;
 
-    float CX;
-    float CY;
+    public float CX;
+    public float CY;
 
     GameObject[,] field;
     GameObject[,] border;
@@ -22,12 +23,14 @@ public class EachPlayer : MonoBehaviour
     GameObject chara;
     Vector2Int nowCharaPos;
 
-    Vector3 mazePos;
+    public Vector3 mazePos;
     Vector3 vibPos;
     float vib = 0f;
     float vibTime = 0f;
 
     MazeManager seenWalls;
+
+    public SolveMazeBigControl bigControl;
 
     private char c(char x)
     {
@@ -83,6 +86,7 @@ public class EachPlayer : MonoBehaviour
                     string.Format("GP{0}[{1},{2}]", player, i, j));
                 field[i, j].AddComponent<SpriteRenderer>();
                 field[i, j].GetComponent<SpriteRenderer>().sprite = picBgField;
+                field[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBG";
                 field[i, j].transform.parent = this.transform;
                 field[i, j].transform.localPosition = new Vector3(
                     fieldWidth * j, -fieldHeight * i, 0f);
@@ -105,6 +109,8 @@ public class EachPlayer : MonoBehaviour
                     string.Format("WP{0}[{1},{2}]", player, i, j));
                 border[i, j].AddComponent<SpriteRenderer>();
                 border[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/CornerE_Line");
+                border[i, j].GetComponent<SpriteRenderer>().color = mainColor;
+                border[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBorder";
                 border[i, j].transform.parent = this.transform;
                 border[i, j].transform.localPosition = new Vector3(
                     fieldWidth  * (j - 0.5f), -fieldHeight * (i - 0.5f), -1f);
@@ -114,6 +120,7 @@ public class EachPlayer : MonoBehaviour
                     string.Format("WP{0}[{1},{2}]", player, i, j));
                 borderLight[i, j].AddComponent<SpriteRenderer>();
                 borderLight[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/CornerZ_Light");
+                borderLight[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBorder";
                 borderLight[i, j].transform.parent = this.transform;
                 borderLight[i, j].transform.localPosition = new Vector3(
                     fieldWidth * (j - 0.5f), -fieldHeight * (i - 0.5f), -1f);
@@ -129,7 +136,7 @@ public class EachPlayer : MonoBehaviour
     {
         vib = 0.2f;
         reloadWalls();
-
+        bigControl.wallHited();
     }
 
     public void setLightOpaci(float per)
