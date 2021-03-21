@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class SolveMazeBigControl : MonoBehaviour
 {
 
-    float timtick = 0f;
+    
     AudioSource audioSource;
     public AudioClip BGM;
 
@@ -23,6 +23,15 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public Text BigText;
     public Text NextText;
+    public Text WallText;
+    
+
+    bool duringTransit = false;
+
+    public float timeBegin = 30f;
+    float timeRem = 0f;
+    public Text timeText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +47,7 @@ public class SolveMazeBigControl : MonoBehaviour
         GameDataManager.setPhase("Solving");
         GameDataManager.saveGame();
 
-
+        timeRem = 30f;
         //TODO : Compare 2 maze who make Easier maze Start first
         curTurn = 1;
         ReloadText();
@@ -67,6 +76,21 @@ public class SolveMazeBigControl : MonoBehaviour
             animator.SetTrigger("PressEnter");
         }
 
+        if (!waitForPlayer && !duringTransit)
+        {
+            if (timeRem > 0f)
+            {
+                timeRem -= Time.deltaTime;
+                timeText.text = ((int)Mathf.Ceil(timeRem)).ToString("000");
+
+            }
+            else
+            {
+                timeText.text = "000";
+                timeOut();
+            }
+        }
+
     }
 
     private void ReloadText()
@@ -77,13 +101,32 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public void wallHited()
     {
-        p1Field.isPlayable = false;
-        p2Field.isPlayable = false;
-        curTurn = (curTurn == 1) ? 2 : 1;
-        animator.SetTrigger("WallHit");
-        StartCoroutine(transitToAnother());
+        if (!duringTransit)
+        {
+            duringTransit = true;
+            p1Field.isPlayable = false;
+            p2Field.isPlayable = false;
+            curTurn = (curTurn == 1) ? 2 : 1;
+            WallText.text = "WALL HIT!";
+            animator.SetTrigger("WallHit");
+            StartCoroutine(transitToAnother());
+        }
     }
-    
+
+    public void timeOut()
+    {
+        if (!duringTransit)
+        {
+            duringTransit = true;
+            p1Field.isPlayable = false;
+            p2Field.isPlayable = false;
+            curTurn = (curTurn == 1) ? 2 : 1;
+            WallText.text = "TIME UP!";
+            animator.SetTrigger("WallHit");
+            StartCoroutine(transitToAnother());
+        }
+    }
+
 
     public void rePosition()
     {
@@ -98,6 +141,9 @@ public class SolveMazeBigControl : MonoBehaviour
         yield return new WaitForSeconds(3);
         ReloadText();
         rePosition();
+        timeRem = timeBegin;
+        timeText.text = ((int)Mathf.Ceil(timeRem)).ToString("000");
         waitForPlayer = true;
+        duringTransit = false;
     }
 }
