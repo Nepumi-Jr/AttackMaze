@@ -94,10 +94,10 @@ AnimatorStateMachine:
     m_Position: {x: 200, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5537464681712056089}
-    m_Position: {x: 560, y: 220, z: 0}
+    m_Position: {x: 500, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4553887365720646793}
-    m_Position: {x: 560, y: 60, z: 0}
+    m_Position: {x: 680, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3071687037179350512}
     m_Position: {x: 560, y: 0, z: 0}
@@ -108,7 +108,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -10, y: 10, z: 0}
   m_EntryPosition: {x: 220, y: -50, z: 0}
-  m_ExitPosition: {x: 800, y: 120, z: 0}
+  m_ExitPosition: {x: 880, y: 220, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 8921226092328157742}
 --- !u!1101 &-5701271454600074980
@@ -248,13 +248,13 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: WallHit
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer

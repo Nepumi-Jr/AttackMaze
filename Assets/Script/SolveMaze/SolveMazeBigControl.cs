@@ -32,6 +32,12 @@ public class SolveMazeBigControl : MonoBehaviour
     float timeRem = 0f;
     public Text timeText;
 
+    bool isCheat = false;
+    public GameObject WhatMeme;
+    public AudioClip WhatMusic;
+    bool backToMenu = true;
+    public GameObject cheatAppear;
+
 
     // Start is called before the first frame update
     void Start()
@@ -49,10 +55,38 @@ public class SolveMazeBigControl : MonoBehaviour
 
         timeRem = 30f;
         //TODO : Compare 2 maze who make Easier maze Start first
-        curTurn = 1;
+        
+
+        if (GameDataManager.player1Maze.getDifficultyMaze() < GameDataManager.player2Maze.getDifficultyMaze())
+        {
+            curTurn = 2;
+        }
+        else
+        {
+            curTurn = 1;
+        }
+
+
+
         ReloadText();
         rePosition();
+        if (GameDataManager.player1Maze.getDifficultyMaze() < 0f || GameDataManager.player2Maze.getDifficultyMaze() < 0f)
+        {
+            isCheat = true;
+        }
+
+
+        
     }
+
+    void BoomCheat()
+    {
+        WhatMeme.SetActive(true);
+        cheatAppear.SetActive(true);
+        audioSource.clip = WhatMusic;
+        audioSource.Play();
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -68,15 +102,32 @@ public class SolveMazeBigControl : MonoBehaviour
         p1Field.setLightOpaci(nowOpa);
         p2Field.setLightOpaci(nowOpa);
 
+        if (Input.GetKeyDown(KeyCode.Return) && isCheat && !backToMenu)
+        {
+            ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.MainMenu);
+            backToMenu = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.Return) && waitForPlayer)
         {
             waitForPlayer = false;
-            p1Field.isPlayable = (curTurn == 1);
-            p2Field.isPlayable = (curTurn == 2);
+
+            if (isCheat)
+            {
+                BoomCheat();
+            }
+            else
+            {
+                p1Field.isPlayable = (curTurn == 1);
+                p2Field.isPlayable = (curTurn == 2);
+            }
+            backToMenu = false;
             animator.SetTrigger("PressEnter");
         }
 
-        if (!waitForPlayer && !duringTransit)
+        
+
+        if (!waitForPlayer && !duringTransit && !isCheat)
         {
             if (timeRem > 0f)
             {
