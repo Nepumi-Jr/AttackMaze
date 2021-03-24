@@ -47,3 +47,6 @@ TagManager:
   - name: MazeBorder
     uniqueID: 2051067605
     locked: 0
+  - name: MazeFlag
+    uniqueID: 1491495513
+    locked: 0

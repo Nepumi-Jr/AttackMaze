@@ -3,3 +3,38 @@ English
 
 [TestText1]
 Test text 1 : P U S S Y F O R D
+
+
+
+
+
+
+
+
+
+[SPSolve] // solve phase goes here
+P{0}'s Solve
+
+[SPTurn]
+P{0}'s Turn
+
+[SPEnter]
+Press enter to continue
+
+[SPWallHit]
+WALL HIT!
+
+[SPTimeOut]
+TIME UP!
+
+[SPTime]
+TIME
+
+[SPBack]
+-Press Enter to go back main menu-
+
+[SPCheat]
+Something went wrong in maze
+
+[SPWon]
+P{0} Won!

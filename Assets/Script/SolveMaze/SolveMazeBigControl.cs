@@ -33,15 +33,22 @@ public class SolveMazeBigControl : MonoBehaviour
     public Text timeText;
 
     bool isCheat = false;
+    bool endGame = false;
     public GameObject WhatMeme;
     public AudioClip WhatMusic;
     bool backToMenu = true;
     public GameObject cheatAppear;
+    public GameObject Char;
+    public Text wonText;
+    public ParticleSystem par1;
+    public ParticleSystem par2;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        LangManager.loadLang("TH");
         audioSource = GetComponent<AudioSource>();
         audioSource.loop = true;
         audioSource.clip = BGM;
@@ -73,6 +80,7 @@ public class SolveMazeBigControl : MonoBehaviour
         if (GameDataManager.player1Maze.getDifficultyMaze() < 0f || GameDataManager.player2Maze.getDifficultyMaze() < 0f)
         {
             isCheat = true;
+            endGame = true;
         }
 
 
@@ -102,7 +110,7 @@ public class SolveMazeBigControl : MonoBehaviour
         p1Field.setLightOpaci(nowOpa);
         p2Field.setLightOpaci(nowOpa);
 
-        if (Input.GetKeyDown(KeyCode.Return) && isCheat && !backToMenu)
+        if (Input.GetKeyDown(KeyCode.Return) && endGame && !backToMenu)
         {
             ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.MainMenu);
             backToMenu = true;
@@ -127,7 +135,7 @@ public class SolveMazeBigControl : MonoBehaviour
 
         
 
-        if (!waitForPlayer && !duringTransit && !isCheat)
+        if (!waitForPlayer && !duringTransit && !endGame)
         {
             if (timeRem > 0f)
             {
@@ -146,8 +154,8 @@ public class SolveMazeBigControl : MonoBehaviour
 
     private void ReloadText()
     {
-        BigText.text = string.Format("P{0}'s Solve", curTurn);
-        NextText.text = string.Format("P{0}'s Turn!", curTurn);
+        BigText.text = string.Format(LangManager.calling("SPSolve"), curTurn);
+        NextText.text = string.Format(LangManager.calling("SPTurn"), curTurn);
     }
 
     public void wallHited()
@@ -158,7 +166,7 @@ public class SolveMazeBigControl : MonoBehaviour
             p1Field.isPlayable = false;
             p2Field.isPlayable = false;
             curTurn = (curTurn == 1) ? 2 : 1;
-            WallText.text = "WALL HIT!";
+            WallText.text = LangManager.calling("SPWallHit");
             animator.SetTrigger("WallHit");
             StartCoroutine(transitToAnother());
         }
@@ -172,7 +180,7 @@ public class SolveMazeBigControl : MonoBehaviour
             p1Field.isPlayable = false;
             p2Field.isPlayable = false;
             curTurn = (curTurn == 1) ? 2 : 1;
-            WallText.text = "TIME UP!";
+            WallText.text = LangManager.calling("SPTimeOut");
             animator.SetTrigger("WallHit");
             StartCoroutine(transitToAnother());
         }
@@ -183,8 +191,8 @@ public class SolveMazeBigControl : MonoBehaviour
     {
         p1Field.mazePos = (curTurn == 1) ? new Vector3(-7.25f, 1.94f) : new Vector3(5.96f, 0.87f);
         p2Field.mazePos = (curTurn == 2) ? new Vector3(-7.25f, 1.94f) : new Vector3(5.96f, 0.87f);
-        p1Field.transform.localScale = (curTurn == 1) ? new Vector3(1f, 1f) : new Vector3(0.5f, 0.5f);
-        p2Field.transform.localScale = (curTurn == 2) ? new Vector3(1f, 1f) : new Vector3(0.5f, 0.5f);
+        p1Field.transform.localScale = (curTurn == 1) ? new Vector3(1f, 1f, 0.5f) : new Vector3(0.5f, 0.5f, 0.5f);
+        p2Field.transform.localScale = (curTurn == 2) ? new Vector3(1f, 1f, 0.5f) : new Vector3(0.5f, 0.5f, 0.5f);
     }
 
     IEnumerator transitToAnother()
@@ -196,5 +204,19 @@ public class SolveMazeBigControl : MonoBehaviour
         timeText.text = ((int)Mathf.Ceil(timeRem)).ToString("000");
         waitForPlayer = true;
         duringTransit = false;
+    }
+
+    public void GameWon(int player,Color pColor)
+    {
+        endGame = true;
+        duringTransit = true;
+        p1Field.isPlayable = false;
+        p2Field.isPlayable = false;
+        wonText.text = string.Format(LangManager.calling("SPWon"), player);
+        wonText.color = pColor;
+        par1.Play();
+        par2.Play();
+
+        animator.SetTrigger("EndTrig");
     }
 }

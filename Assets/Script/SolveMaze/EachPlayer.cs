@@ -20,40 +20,29 @@ public class EachPlayer : MonoBehaviour
     GameObject[,] field;
     GameObject[,] border;
     GameObject[,] borderLight;
+    GameObject[,] fieldPassed;
     GameObject chara;
+    GameObject finishFlag;
     Vector2Int nowCharaPos;
+    float rotX = 0f;
+    float rotZ = 0f;
 
     public Vector3 mazePos;
     Vector3 vibPos;
     float vib = 0f;
     float vibTime = 0f;
 
+    MazeManager bigPMaze;
     MazeManager seenWalls;
 
     public SolveMazeBigControl bigControl;
 
-    private char c(char x)
-    {
-        switch (x)
-        {
-            case '0': return '0';
-            case '1': return '1';
-            case '2': return '2';
-            case '3': return '4';
-            case '4': return '8';
-            case '5': return '3';
-            case '6': return '5';
-            case '7': return '9';
-            case '8': return '6';
-            case '9': return 'A';
-            case 'A': return 'C';
-            case 'B': return 'E';
-            case 'C': return 'D';
-            case 'D': return 'B';
-            case 'E': return '7';
-            default: return 'F';
-        }
-    }
+    short[,] fieldCanWalked;
+
+    public Material charMaterial;
+    bool boomEnd = false;
+
+
 
 
     // Start is called before the first frame update
@@ -63,17 +52,38 @@ public class EachPlayer : MonoBehaviour
         fieldWidth = picBgField.rect.width / picBgField.pixelsPerUnit;
         fieldHeight = picBgField.rect.height / picBgField.pixelsPerUnit;
 
+        
+
         rowMaze = GameDataManager.getRowMaze();
         columnMaze = GameDataManager.getColumnMaze();
+        
+        if (player == 1)
+        {
+            bigPMaze = GameDataManager.player1Maze;
+        }
+        else
+        {
+            bigPMaze = GameDataManager.player2Maze;
+        }
+
         seenWalls = new MazeManager(rowMaze, columnMaze);
         field = new GameObject[rowMaze, columnMaze];
+        fieldPassed = new GameObject[rowMaze, columnMaze];
         border = new GameObject[rowMaze + 1, columnMaze + 1];
         borderLight = new GameObject[rowMaze + 1, columnMaze + 1];
+        fieldCanWalked = new short[rowMaze, columnMaze];
 
         CX = - fieldWidth * columnMaze / 2 + fieldWidth / 2;
         CY = fieldHeight * rowMaze / 2 - fieldHeight / 2;
 
-        mazePos = new Vector3(CX, CY);
+        finishFlag = new GameObject(string.Format("FL{0}", player));
+        finishFlag.AddComponent<SpriteRenderer>();
+        finishFlag.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish");
+        finishFlag.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
+        finishFlag.transform.parent = this.transform;
+        finishFlag.transform.localPosition = new Vector3(
+                    fieldWidth * (bigPMaze.getEnd().x), -fieldHeight * (bigPMaze.getEnd().y), 0f);
+        finishFlag.transform.localScale = new Vector3(1f,1f,1f);
 
 
         float wallZoom = picBgField.rect.width;
@@ -90,16 +100,30 @@ public class EachPlayer : MonoBehaviour
                 field[i, j].transform.parent = this.transform;
                 field[i, j].transform.localPosition = new Vector3(
                     fieldWidth * j, -fieldHeight * i, 0f);
+                field[i, j].transform.localScale = new Vector3(
+                    1f,1f,1f);
+
+                fieldPassed[i, j] = new GameObject(string.Format("GPw{0}[{1},{2}]", player, i, j));
+                fieldPassed[i, j].AddComponent<SpriteRenderer>();
+                fieldPassed[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/PassZ");
+                fieldPassed[i, j].GetComponent<SpriteRenderer>().color = mainColor;
+                fieldPassed[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBorder";
+                fieldPassed[i, j].transform.parent = this.transform;
+                fieldPassed[i, j].transform.localPosition = new Vector3(
+                    fieldWidth * j, -fieldHeight * i, 0f);
+                fieldPassed[i, j].transform.localScale = new Vector3(
+                    1f, 1f, 1f);
+                fieldCanWalked[i, j] = 0;
             }
         }
 
-        chara = new GameObject(string.Format("P{0}Chara", player));
+        chara = Instantiate(bigControl.Char);
+        chara.SetActive(true);
         chara.transform.parent = this.transform;
-        chara.AddComponent<SpriteRenderer>();
-        chara.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Capture");
-        chara.transform.localScale = new Vector3(0.2f, 0.2f);
+        chara.transform.localScale = new Vector3(25f, 25f, 25f);
         nowCharaPos = GameDataManager.player1Maze.getStart();
         chara.transform.localPosition = new Vector3(0f, 0f);
+        chara.GetComponent<MeshRenderer>().material = charMaterial;
 
         for (int i = 0; i < rowMaze + 1; i++)
         {
@@ -237,6 +261,13 @@ public class EachPlayer : MonoBehaviour
         }
     }
 
+    void fieldPassReload(int i,int j)
+    {
+        (string, short) res = wallShortToIt(fieldCanWalked[i, j]);
+        fieldPassed[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Pass" + res.Item1);
+        fieldPassed[i, j].transform.localRotation = Quaternion.Euler(0f, 0f, 90f * res.Item2);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -249,6 +280,8 @@ public class EachPlayer : MonoBehaviour
             vib -= Time.deltaTime / 2f;
         }
 
+        rotZ = (rotZ + Time.deltaTime * 70f) % 360f;
+
 
         this.transform.localPosition = mazePos + vibPos;
 
@@ -256,145 +289,101 @@ public class EachPlayer : MonoBehaviour
         { 
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                chara.transform.localRotation = Quaternion.Euler(0, 0, -90f);
-                if (player == 1)
+                rotX = 180f;
+                if (bigPMaze.isPass(nowCharaPos.x, nowCharaPos.y, 'L'))
                 {
-                    if (GameDataManager.player1Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'L'))
-                    {
-                        nowCharaPos += new Vector2Int(0, -1);
-                    }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'L'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'L');
-                        }
-                        wallHit();
-                    }
+                    fieldCanWalked[nowCharaPos.x, nowCharaPos.y] |= 8;
+                    fieldCanWalked[nowCharaPos.x, nowCharaPos.y - 1] |= 2;
+                    fieldPassReload(nowCharaPos.x, nowCharaPos.y);
+                    fieldPassReload(nowCharaPos.x, nowCharaPos.y - 1);
+
+                    nowCharaPos += new Vector2Int(0, -1);
                 }
                 else
                 {
-                    if (GameDataManager.player2Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'L'))
+                    if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'L'))
                     {
-                        nowCharaPos += new Vector2Int(0, -1);
+                        seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'L');
                     }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'L'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'L');
-                        }
-                        wallHit();
-                    }
+                    wallHit();
                 }
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                chara.transform.localRotation = Quaternion.Euler(0, 0, 90f);
-                if (player == 1)
+                rotX = 0f;
+
+                if (bigPMaze.isPass(nowCharaPos.x, nowCharaPos.y, 'R'))
                 {
-                    if (GameDataManager.player1Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'R'))
-                    {
-                        nowCharaPos += new Vector2Int(0, 1);
-                    }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'R'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'R');
-                        }
-                        wallHit();
-                    }
+                    fieldCanWalked[nowCharaPos.x, nowCharaPos.y] |= 2;
+                    fieldCanWalked[nowCharaPos.x, nowCharaPos.y + 1] |= 8;
+                    fieldPassReload(nowCharaPos.x, nowCharaPos.y);
+                    fieldPassReload(nowCharaPos.x, nowCharaPos.y + 1);
+                    nowCharaPos += new Vector2Int(0, 1);
                 }
                 else
                 {
-                    if (GameDataManager.player2Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'R'))
+                    if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'R'))
                     {
-                        nowCharaPos += new Vector2Int(0, 1);
+                        seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'R');
                     }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'R'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'R');
-                        }
-                        wallHit();
-                    }
+                    wallHit();
                 }
             }
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                chara.transform.localRotation = Quaternion.Euler(0, 0, 0f);
-                if (player == 1)
+                rotX = 270f;
+                if (bigPMaze.isPass(nowCharaPos.x, nowCharaPos.y, 'U'))
                 {
-                    if (GameDataManager.player1Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'U'))
-                    {
-                        nowCharaPos += new Vector2Int(-1, 0);
-                    }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'U'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'U');
-                        }
-                        wallHit();
-                    }
+                    fieldCanWalked[nowCharaPos.x, nowCharaPos.y] |= 1;
+                    fieldCanWalked[nowCharaPos.x - 1, nowCharaPos.y ] |= 4;
+                    fieldPassReload(nowCharaPos.x, nowCharaPos.y);
+                    fieldPassReload(nowCharaPos.x - 1, nowCharaPos.y);
+                    nowCharaPos += new Vector2Int(-1, 0);
                 }
                 else
                 {
-                    if (GameDataManager.player2Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'U'))
+                    if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'U'))
                     {
-                        nowCharaPos += new Vector2Int(-1, 0);
+                        seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'U');
                     }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'U'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'U');
-                        }
-                        wallHit();
-                    }
+                    wallHit();
                 }
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                chara.transform.localRotation = Quaternion.Euler(0, 0, 180f);
-                if (player == 1)
+                rotX = 90f;
+
+                if (bigPMaze.isPass(nowCharaPos.x, nowCharaPos.y, 'D'))
                 {
-                    if (GameDataManager.player1Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'D'))
-                    {
-                        nowCharaPos += new Vector2Int(1, 0);
-                    }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'D'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'D');
-                        }
-                        wallHit();
-                    }
+                    fieldCanWalked[nowCharaPos.x, nowCharaPos.y] |= 4;
+                    fieldCanWalked[nowCharaPos.x + 1, nowCharaPos.y] |= 1;
+                    fieldPassReload(nowCharaPos.x, nowCharaPos.y);
+                    fieldPassReload(nowCharaPos.x + 1, nowCharaPos.y);
+                    nowCharaPos += new Vector2Int(1, 0);
                 }
                 else
                 {
-                    if (GameDataManager.player2Maze.isPass(nowCharaPos.x, nowCharaPos.y, 'D'))
+                    if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'D'))
                     {
-                        nowCharaPos += new Vector2Int(1, 0);
+                        seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'D');
                     }
-                    else
-                    {
-                        if (seenWalls.isPass(nowCharaPos.x, nowCharaPos.y, 'D'))
-                        {
-                            seenWalls.toggleWall(nowCharaPos.x, nowCharaPos.y, 'D');
-                        }
-                        wallHit();
-                    }
+                    wallHit();
                 }
             }
             
-            if (Input.anyKeyDown)
-            {
-                chara.transform.localPosition = new Vector3(nowCharaPos.y * fieldWidth, -nowCharaPos.x * fieldHeight);
-            }
         }
+
+        float speed = 12f;
+
+        chara.transform.localPosition = Vector3.Lerp(chara.transform.localPosition, new Vector3(nowCharaPos.y * fieldWidth, -nowCharaPos.x * fieldHeight), Time.deltaTime * speed);
+        chara.transform.localRotation = Quaternion.Lerp(chara.transform.localRotation, Quaternion.Euler(rotX, 90f, rotZ), Time.deltaTime * speed);
+
+        if (nowCharaPos.x == bigPMaze.getEnd().x && nowCharaPos.y == bigPMaze.getEnd().y && !boomEnd)
+        {
+            boomEnd = true;
+            bigControl.GameWon(player, mainColor);
+        }
+
+
     }
 }

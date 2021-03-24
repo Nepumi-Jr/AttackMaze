@@ -7,3 +7,30 @@ Test text 1 : บักฟอร์ดหน้าหีหีหีหีหี
 
 
 มาก
+
+[SPSolve] // solve phase goes here
+การแก้ของ P{0}
+
+[SPTurn]
+ตา P{0}
+
+[SPEnter]
+กด Enter เมื่อพร้อมแล้ว
+
+[SPWallHit]
+ชนกำแพง!
+
+[SPTimeOut]
+หมดเวลา!
+
+[SPTime]
+เวลา
+
+[SPBack]
+-กด Enter เพื่อกลับสู่เมนู-
+
+[SPCheat]
+มีบางอย่างไม่ถูกต้องในเขาวงกต
+
+[SPWon]
+P{0} ชนะ!
