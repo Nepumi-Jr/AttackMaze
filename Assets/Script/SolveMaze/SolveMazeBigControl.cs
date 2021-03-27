@@ -43,12 +43,12 @@ public class SolveMazeBigControl : MonoBehaviour
     public ParticleSystem par1;
     public ParticleSystem par2;
 
-
+    PauseManager thisPause;
 
     // Start is called before the first frame update
     void Start()
     {
-        LangManager.loadLang("TH");
+
         audioSource = GetComponent<AudioSource>();
         audioSource.loop = true;
         audioSource.clip = BGM;
@@ -61,8 +61,8 @@ public class SolveMazeBigControl : MonoBehaviour
         GameDataManager.saveGame();
 
         timeRem = 30f;
-        //TODO : Compare 2 maze who make Easier maze Start first
-        
+
+        thisPause = GetComponent<PauseManager>();
 
         if (GameDataManager.player1Maze.getDifficultyMaze() < GameDataManager.player2Maze.getDifficultyMaze())
         {
@@ -110,13 +110,20 @@ public class SolveMazeBigControl : MonoBehaviour
         p1Field.setLightOpaci(nowOpa);
         p2Field.setLightOpaci(nowOpa);
 
+        
+
         if (Input.GetKeyDown(KeyCode.Return) && endGame && !backToMenu)
         {
             ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.MainMenu);
             backToMenu = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) && waitForPlayer)
+        if (Input.GetKeyDown(KeyCode.Escape) && !endGame && !duringTransit)
+        {
+            thisPause.callPause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) && waitForPlayer && !thisPause.isPause)
         {
             waitForPlayer = false;
 
@@ -135,7 +142,7 @@ public class SolveMazeBigControl : MonoBehaviour
 
         
 
-        if (!waitForPlayer && !duringTransit && !endGame)
+        if (!waitForPlayer && !duringTransit && !endGame && !thisPause.isPause)
         {
             if (timeRem > 0f)
             {
@@ -208,15 +215,19 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public void GameWon(int player,Color pColor)
     {
-        endGame = true;
-        duringTransit = true;
-        p1Field.isPlayable = false;
-        p2Field.isPlayable = false;
-        wonText.text = string.Format(LangManager.calling("SPWon"), player);
-        wonText.color = pColor;
-        par1.Play();
-        par2.Play();
+        if (!isCheat)
+        {
+            endGame = true;
+            duringTransit = true;
+            p1Field.isPlayable = false;
+            p2Field.isPlayable = false;
+            wonText.text = string.Format(LangManager.calling("SPWon"), player);
+            wonText.color = pColor;
+            par1.Play();
+            par2.Play();
 
-        animator.SetTrigger("EndTrig");
+            animator.SetTrigger("EndTrig");
+        }
+        
     }
 }

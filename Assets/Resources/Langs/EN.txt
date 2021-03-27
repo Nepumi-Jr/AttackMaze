@@ -1,15 +1,95 @@
 [LangName]
 English
 
+[LangNameNative]
+English
+
 [TestText1]
 Test text 1 : P U S S Y F O R D
 
+[PContruct]//Phase Stuff
+Construct
+
+[PSolving]
+Solve
 
 
+[PaTitle]//Pause Stuff
+Pause
+
+[PaCon]
+Continue
+
+[PaBack]
+Back to main
 
 
+[MPlay]//Menu
+Play
 
+[MSetting]
+Setting
 
+[MQuit]
+Quit
+
+[MBack]
+Back
+
+[MVideo]
+Video
+
+[MAudio]
+Audio
+
+[MReso]
+Resolution
+
+[MFullSc]
+Full screen
+
+[MGrapQ]
+Graphic qualily
+
+[MMasV]
+Master Volume
+
+[MMusV]
+Music Volume
+
+[MSouV]
+Sound Effect
+
+[MTAudio]
+Audio setting
+
+[MTVideo]
+Video setting
+
+[MTSetting]
+Setting
+
+[MTContinue]
+Continue?
+
+[MCExplain]
+-It's look like previous game isn't ended yet-
+Do you wish to continue?
+
+[MCPhase]
+Phase : 
+
+[MCLast]
+Last seen : 
+
+[MCCont]
+Continue
+
+[MCNewgame]
+New Game
+
+[MCNewWarn]
+(Previous game will lost)
 
 
 [SPSolve] // solve phase goes here

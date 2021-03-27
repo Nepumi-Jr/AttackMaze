@@ -19,7 +19,6 @@ public class LangManager
     {
         if (!firstTime)
         {
-            Debug.Log("Hello");
             avaliableLang.Clear();
             firstTime = true;
             foreach (TextAsset eachLang in Resources.LoadAll<TextAsset>("Langs"))
@@ -36,7 +35,16 @@ public class LangManager
         selectedLang = lang;
         langData.Clear();
 
-        string fileText = Resources.Load<TextAsset>("Langs/" + selectedLang).text;
+        string fileText = Resources.Load<TextAsset>("Langs/EN").text;
+        TextAsset file = Resources.Load<TextAsset>("Langs/" + selectedLang);
+        if (file != null)
+        {
+            fileText = file.text;
+        }
+        else
+        {
+            Debug.LogWarning(selectedLang + "NOT FOUND");
+        }
 
         string nameData = "";
         string textData = "";
@@ -48,7 +56,6 @@ public class LangManager
                 if (nameData != "")
                 {
                     langData.Add(nameData, textData.Trim());
-                    Debug.Log("Adding " + nameData + "...\n" + textData.Trim());
                     textData = "";
                 }
 
@@ -64,7 +71,6 @@ public class LangManager
         if (nameData != "")
         {
             langData.Add(nameData, textData.Trim());
-            Debug.Log("Adding " + nameData + "...\n" + textData.Trim());
             textData = "";
         }
 
@@ -79,5 +85,26 @@ public class LangManager
         }
         Debug.LogWarning("missing " + name);
         return "missing " + name;
+    }
+
+    public static string moveOnSet(string curLang)
+    {
+        TextAsset[] allLang =  Resources.LoadAll<TextAsset>("Langs");
+        int ind = -1;
+        for(int i = 0; i < allLang.Length; i++)
+        {
+            if(allLang[i].name == curLang)
+            {
+                ind = i;
+                break;
+            }
+        }
+        ind++;
+        ind %= allLang.Length;
+
+        loadLang(allLang[ind].name);
+
+        return allLang[ind].name;
+
     }
 }

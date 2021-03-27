@@ -1,6 +1,10 @@
 [LangName]
 Thai
 
+[LangNameNative]
+ภาษาไทย
+
+
 [TestText1]
 Test text 1 : บักฟอร์ดหน้าหีหีหีหีหีหีหีหี
 

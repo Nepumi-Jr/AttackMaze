@@ -43,12 +43,19 @@ public class GameDataManager
         player1Maze.loadMaze(content[0].Replace("P1 Maze:", ""));
         player2Maze.loadMaze(content[1].Replace("P2 Maze:", ""));
         phase = content[2].Replace("phase:", "");
-        timeStamp = content[2].Replace("Last seen:", "");
+        timeStamp = content[3].Replace("Last seen:", "");
     }
 
     public static void setPhase(string phasee)
     {
+        if (!isLoaded) loadGame();
         phase = phasee;
+    }
+
+    public static string getPhase()
+    {
+        if (!isLoaded) loadGame();
+        return phase;
     }
 
     public static int getRowMaze()
@@ -61,6 +68,12 @@ public class GameDataManager
     {
         if (!isLoaded) loadGame();
         return player1Maze.getGridColumn();
+    }
+
+    public static string lastSeen()
+    {
+        if (!isLoaded) loadGame();
+        return timeStamp;
     }
 
 }
