@@ -82,7 +82,7 @@ public class EachPlayer : MonoBehaviour
         finishFlag.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
         finishFlag.transform.parent = this.transform;
         finishFlag.transform.localPosition = new Vector3(
-                    fieldWidth * (bigPMaze.getEnd().x), -fieldHeight * (bigPMaze.getEnd().y), 0f);
+                    fieldWidth * (bigPMaze.getEnd().y), -fieldHeight * (bigPMaze.getEnd().x), 0f);
         finishFlag.transform.localScale = new Vector3(1f,1f,1f);
 
 
