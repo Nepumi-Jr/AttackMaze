@@ -12,6 +12,93 @@ Test text 1 : บักฟอร์ดหน้าหีหีหีหีหี
 
 มาก
 
+
+[PContruct]//Phase Stuff
+การสร้าง
+
+[PSolving]
+แก้เขาวงกต
+
+
+[PaTitle]//Pause Stuff
+หยุดเกม
+
+[PaCon]
+เล่นต่อ
+
+[PaBack]
+กลับสู่หน้าหลัก
+
+
+[MPlay]//Menu
+เล่น
+
+[MSetting]
+ตั้งค่า
+
+[MQuit]
+ออกจากเกม
+
+[MBack]
+กลับ
+
+[MVideo]
+ตั้งค่าหน้าจอ
+
+[MAudio]
+ตั้งค่าเสียง
+
+[MReso]
+ความละเอียด
+
+[MFullSc]
+เต็มหน้าจอ
+
+[MGrapQ]
+คุณภาพของภาพ
+
+[MMasV]
+เสียงหลัก
+
+[MMusV]
+เสียงเพลง
+
+[MSouV]
+เสียงประกอบ
+
+[MTAudio]
+ตั้งค่าเสียง
+
+[MTVideo]
+ตั้งค่าหน้าจอ
+
+[MTSetting]
+ตั้งค่า
+
+[MTContinue]
+จะเล่นต่อหรือไม่?
+
+[MCExplain]
+-ดูเหมือนว่าเกมก่อนหน้านี้ยังไม่จบ-
+คุณต้องการดำเนินการต่อหรือไม่?
+
+[MCPhase]
+ช่วง : 
+
+[MCLast]
+เล่นล่าสุดเมื่อ : 
+
+[MCCont]
+เล่นต่อ
+
+[MCNewgame]
+เริ่มเกมใหม่
+
+[MCNewWarn]
+(เกมก่อนหน้านี้จะหายไป)
+
+
+
 [SPSolve] // solve phase goes here
 การแก้ของ P{0}
 

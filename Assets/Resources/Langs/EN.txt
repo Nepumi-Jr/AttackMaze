@@ -37,7 +37,7 @@ Quit
 Back
 
 [MVideo]
-Video
+Display
 
 [MAudio]
 Audio
