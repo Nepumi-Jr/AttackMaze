@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SolveMazeBigControl : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class SolveMazeBigControl : MonoBehaviour
     bool waitForPlayer = true;
     int curTurn = 1;
 
-    public Text BigText;
+    public TextMeshProUGUI BigText;
     public Text NextText;
     public Text WallText;
     
@@ -30,7 +31,7 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public float timeBegin = 30f;
     float timeRem = 0f;
-    public Text timeText;
+    public TextMeshProUGUI timeText;
 
     bool isCheat = false;
     bool endGame = false;
@@ -83,8 +84,11 @@ public class SolveMazeBigControl : MonoBehaviour
             endGame = true;
         }
 
-
-        
+        wonText.font = LangManager.titleTextFont;
+        timeText.font = TMP_FontAsset.CreateFontAsset(LangManager.textFont);
+        BigText.font = TMP_FontAsset.CreateFontAsset(LangManager.titleTextFont);
+        NextText.font = LangManager.titleTextFont;
+        WallText.font = LangManager.titleTextFont;
     }
 
     void BoomCheat()
@@ -162,6 +166,7 @@ public class SolveMazeBigControl : MonoBehaviour
     private void ReloadText()
     {
         BigText.text = string.Format(LangManager.calling("SPSolve"), curTurn);
+        NextText.color = (curTurn == 1) ? p1Field.mainColor : p2Field.mainColor;
         NextText.text = string.Format(LangManager.calling("SPTurn"), curTurn);
     }
 
@@ -196,10 +201,24 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public void rePosition()
     {
-        p1Field.mazePos = (curTurn == 1) ? new Vector3(-7.25f, 1.94f) : new Vector3(5.96f, 0.87f);
-        p2Field.mazePos = (curTurn == 2) ? new Vector3(-7.25f, 1.94f) : new Vector3(5.96f, 0.87f);
-        p1Field.transform.localScale = (curTurn == 1) ? new Vector3(1f, 1f, 0.5f) : new Vector3(0.5f, 0.5f, 0.5f);
-        p2Field.transform.localScale = (curTurn == 2) ? new Vector3(1f, 1f, 0.5f) : new Vector3(0.5f, 0.5f, 0.5f);
+        float scale = Mathf.Min(7 / GameDataManager.getColumnMaze(),1f);
+
+        //5/4      16/9
+        //-5.5 and -6.76
+        //2.42 and 3.96
+
+        float perDel = (((float)Screen.width / Screen.height) - (5f / 4f)) / (16f/9f-5f/4f);
+
+
+        //5/4
+        Vector3 activePos = new Vector3(-5.5f - 1.26f * perDel, 1.94f);
+        Vector3 nonActivePos = new Vector3(2.42f + 1.54f * perDel, 0.87f);
+
+
+        p1Field.mazePos = (curTurn == 1) ? activePos : nonActivePos;
+        p2Field.mazePos = (curTurn == 2) ? activePos : nonActivePos;
+        p1Field.transform.localScale = (curTurn == 1) ? new Vector3(scale, scale, 0.5f) : new Vector3(scale * 0.5f, scale * 0.5f, 0.5f);
+        p2Field.transform.localScale = (curTurn == 2) ? new Vector3(scale, scale, 0.5f) : new Vector3(scale * 0.5f, scale * 0.5f, 0.5f);
     }
 
     IEnumerator transitToAnother()

@@ -7,6 +7,9 @@ public class LangManager
     protected static Dictionary<string, string> langData = new Dictionary<string, string>();
     protected static string selectedLang;
     protected static List<string> avaliableLang = new List<string>();
+    public static Font titleTextFont;
+    public static Font textFont;
+
 
     private static bool firstTime = false;
 
@@ -46,6 +49,34 @@ public class LangManager
             Debug.LogWarning(selectedLang + "NOT FOUND");
         }
 
+        titleTextFont = Resources.Load<Font>("Langs/" + selectedLang + "_Title");
+        if (titleTextFont == null) { 
+            titleTextFont = Resources.Load<Font>("Langs/EN_Title");
+            if (titleTextFont == null)
+            {
+                Debug.LogError("Title font : Default (EN_Title) NOT FOUND");
+            }
+            else
+            {
+                Debug.LogWarning("Title font : " + selectedLang + "NOT FOUND");
+            }
+
+        }
+
+        textFont = Resources.Load<Font>("Langs/" + selectedLang + "_Text");
+        if (textFont == null)
+        {
+            textFont = Resources.Load<Font>("Langs/EN_Text");
+            if (textFont == null)
+            {
+                Debug.LogError("Title font : Default (EN_Text) NOT FOUND");
+            }
+            else
+            {
+                Debug.LogWarning("Title font : " + selectedLang + "NOT FOUND");
+            }
+        }
+
         string nameData = "";
         string textData = "";
 
@@ -81,6 +112,8 @@ public class LangManager
         init();
         if (langData.ContainsKey(name))
         {
+            
+
             return langData[name];
         }
         Debug.LogWarning("missing " + name);

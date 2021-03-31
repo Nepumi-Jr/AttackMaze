@@ -7,6 +7,7 @@ public class UITextCalling : MonoBehaviour
 {
 
     public string codeName;
+    public bool isTitle = false;
     bool FF = false;
 
     // Start is called before the first frame update
@@ -15,7 +16,9 @@ public class UITextCalling : MonoBehaviour
         if (!FF)
         {
             GetComponent<Text>().text = LangManager.calling(codeName);
+            GetComponent<Text>().font = isTitle ? LangManager.titleTextFont : LangManager.textFont;
             FF = true;
         }
+        
     }
 }

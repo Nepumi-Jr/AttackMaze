@@ -16,7 +16,6 @@ public class GameDataManager
     public GameDataManager()
     {
         timeStamp = new DateTimeOffset(DateTime.Now).ToString();
-        Debug.Log("Times " + timeStamp);
     }
 
     public static void saveGame()

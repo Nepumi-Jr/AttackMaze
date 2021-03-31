@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: ff223859760c8e04f8c2e09c3df26d31
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: FreesiaUPC
+  fontNames:
+  - FreesiaUPC
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 34a6c5a470151644cb56306a46dea61d, type: 3}
+  - {fileID: 12800000, guid: a2dd9c38d048fa148ade57dda028261f, type: 3}
+  - {fileID: 12800000, guid: 606d6acff1e40eb42927d000c6869b42, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

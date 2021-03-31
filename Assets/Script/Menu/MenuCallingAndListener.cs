@@ -34,6 +34,7 @@ public class MenuCallingAndListener : MonoBehaviour
         MSfx.value = SettingData.soundVolume;
 
         langText.text = "Lang : " + LangManager.calling("LangNameNative");
+        langText.font = LangManager.textFont;
 
         phaseText.text = LangManager.calling("P" + GameDataManager.getPhase());
         
@@ -93,6 +94,7 @@ public class MenuCallingAndListener : MonoBehaviour
             e.GetComponent<ReloadLangNow>().ReloadText();
         }
         langText.text = "Lang : " + LangManager.calling("LangNameNative");
+        langText.font = LangManager.textFont;
         this.GetComponent<MenuNSerttingNMore>().doSetScreen("SettingPanel");
     }
 

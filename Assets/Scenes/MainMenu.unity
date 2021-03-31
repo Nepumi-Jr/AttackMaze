@@ -316,6 +316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCCont
+  isTitle: 0
 --- !u!114 &5518171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,6 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCPhase
+  isTitle: 0
 --- !u!114 &6773693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -545,6 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MAudio
+  isTitle: 0
 --- !u!1 &23308665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,6 +1212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MFullSc
+  isTitle: 0
 --- !u!1 &225436147
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,6 +1669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MMasV
+  isTitle: 0
 --- !u!1 &328308302
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,6 +1721,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCPhase
+  isTitle: 0
 --- !u!114 &328308305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2248,6 +2254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCNewgame
+  isTitle: 0
 --- !u!114 &609070449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2383,6 +2390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MTAudio
+  isTitle: 1
 --- !u!1 &670904994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2508,6 +2516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCExplain
+  isTitle: 0
 --- !u!114 &683991052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2539,7 +2548,7 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
+    m_LineSpacing: 1.28
   m_Text: '-It''s look like previous game isn''t ended yet-
 
     Do you wish to continue?'
@@ -2775,6 +2784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MBack
+  isTitle: 0
 --- !u!1 &710663934
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,6 +3076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MGrapQ
+  isTitle: 0
 --- !u!1 &786285252
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,6 +3169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MVideo
+  isTitle: 0
 --- !u!1 &792407939
 GameObject:
   m_ObjectHideFlags: 0
@@ -3833,6 +3845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MMusV
+  isTitle: 0
 --- !u!1 &990075800
 GameObject:
   m_ObjectHideFlags: 0
@@ -4050,6 +4063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCNewWarn
+  isTitle: 0
 --- !u!114 &1087450436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4443,6 +4457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MPlay
+  isTitle: 0
 --- !u!1 &1254859690
 GameObject:
   m_ObjectHideFlags: 0
@@ -5026,6 +5041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MBack
+  isTitle: 0
 --- !u!114 &1356371734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5256,6 +5272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MTContinue
+  isTitle: 1
 --- !u!114 &1449370180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5784,6 +5801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MTSetting
+  isTitle: 1
 --- !u!1 &1551811299
 GameObject:
   m_ObjectHideFlags: 0
@@ -6009,6 +6027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCLast
+  isTitle: 0
 --- !u!114 &1564038043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7039,6 +7058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MReso
+  isTitle: 0
 --- !u!1 &1784100888
 GameObject:
   m_ObjectHideFlags: 0
@@ -7133,6 +7153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MTVideo
+  isTitle: 1
 --- !u!1 &1802783601
 GameObject:
   m_ObjectHideFlags: 0
@@ -7184,6 +7205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MCPhase
+  isTitle: 0
 --- !u!114 &1802783604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7317,6 +7339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MSouV
+  isTitle: 0
 --- !u!1 &1850090753
 GameObject:
   m_ObjectHideFlags: 0
@@ -7646,6 +7669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MBack
+  isTitle: 0
 --- !u!1 &1889460703
 GameObject:
   m_ObjectHideFlags: 0
@@ -7946,6 +7970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MQuit
+  isTitle: 0
 --- !u!1 &2039404633
 GameObject:
   m_ObjectHideFlags: 0
@@ -8040,6 +8065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MBack
+  isTitle: 0
 --- !u!1 &2040330202
 GameObject:
   m_ObjectHideFlags: 0
@@ -8132,6 +8158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLang: MSetting
+  isTitle: 0
 --- !u!1 &2048612588
 GameObject:
   m_ObjectHideFlags: 0
