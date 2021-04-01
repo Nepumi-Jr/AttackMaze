@@ -15,7 +15,7 @@ public static class ScreenLoadManager
 
     public enum Scene
     {
-        MainMenu, SolveMaze, Loading
+        MainMenu, SolveMaze, Loading, ContructMaze
     }
 
     private static Action OnLoaderCallback;

@@ -7,8 +7,11 @@ English
 [TestText1]
 Test text 1 : P U S S Y F O R D
 
-[PContruct]//Phase Stuff
-Construct
+[PConP1]//Phase Stuff
+P1 Construct
+
+[PConP2]//Phase Stuff
+P2 Construct
 
 [PSolving]
 Solve
@@ -92,11 +95,47 @@ New Game
 (Previous game will lost)
 
 
+[CDisc]// Contruct phase goes here
+Disclaimer
+
+[CDisDes]
+This screen make for player {0} only
+
+Player {1} are NOT allowed to look this screen!
+
+[CSub]
+You are about to submit...
+Are you sure?
+
+[CEnPro]
+Press *enter* to Proceed
+
+[CEsBack]
+Press *Esc* to go back
+
+[CMaze]
+P{0}'s Maze
+
+[CBSub]
+Submit
+
+[CBFin]
+Set finish
+
+[CBStart]
+Set start
+
+[CBwall]
+Set wall
+
+
+
 [SPSolve] // solve phase goes here
 P{0}'s Solve
 
 [SPTurn]
 P{0}'s Turn
+
 
 [SPEnter]
 Press enter to continue

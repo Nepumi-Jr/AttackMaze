@@ -53,7 +53,7 @@ public class MenuNSerttingNMore : MonoBehaviour
         }
         else
         {
-            //TODO : Phase Contruct
+            ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.ContructMaze);
         }
     }
 

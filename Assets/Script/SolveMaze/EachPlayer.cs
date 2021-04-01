@@ -375,6 +375,9 @@ public class EachPlayer : MonoBehaviour
 
         float speed = 12f;
 
+        //chara.transform.localPosition = new Vector3(nowCharaPos.y * fieldWidth, -nowCharaPos.x * fieldHeight);
+        //chara.transform.localRotation = Quaternion.Euler(rotX, 90f, rotZ);
+
         chara.transform.localPosition = Vector3.Lerp(chara.transform.localPosition, new Vector3(nowCharaPos.y * fieldWidth, -nowCharaPos.x * fieldHeight), Time.deltaTime * speed);
         chara.transform.localRotation = Quaternion.Lerp(chara.transform.localRotation, Quaternion.Euler(rotX, 90f, rotZ), Time.deltaTime * speed);
 

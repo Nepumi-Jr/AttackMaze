@@ -252,6 +252,7 @@ public class MazeManager
             //Left side
             if (nowColumn > 0 && ((mazeField[nowRow, nowColumn] & 8) != 0) && flg[nowRow, nowColumn - 1] == false)
             {
+                flg[nowRow, nowColumn - 1] = true;
                 if (nowDir != 'L')
                 {
                     que.Enqueue((nowRow, nowColumn - 1, nowDistance + 1, nowTurns + 1, 'L'));
@@ -263,8 +264,9 @@ public class MazeManager
             }
 
             //right side
-            if (nowColumn <= gridColumn && ((mazeField[nowRow, nowColumn] & 2) != 0) && flg[nowRow, nowColumn + 1] == false)
+            if (nowColumn + 1 < gridColumn && ((mazeField[nowRow, nowColumn] & 2) != 0) && flg[nowRow, nowColumn + 1] == false)
             {
+                flg[nowRow, nowColumn + 1] = true;
                 if (nowDir != 'R')
                 {
                     que.Enqueue((nowRow, nowColumn + 1, nowDistance + 1, nowTurns + 1, 'R'));
@@ -278,6 +280,7 @@ public class MazeManager
             //Up side
             if (nowRow > 0 && ((mazeField[nowRow, nowColumn] & 1) != 0) && flg[nowRow - 1, nowColumn] == false)
             {
+                flg[nowRow - 1, nowColumn] = true;
                 if (nowDir != 'U')
                 {
                     que.Enqueue((nowRow - 1, nowColumn, nowDistance + 1, nowTurns + 1, 'U'));
@@ -289,8 +292,9 @@ public class MazeManager
             }
 
             //right side
-            if (nowRow <= gridRow && ((mazeField[nowRow, nowColumn] & 4) != 0) && flg[nowRow + 1, nowColumn] == false)
+            if (nowRow + 1 < gridRow && ((mazeField[nowRow, nowColumn] & 4) != 0) && flg[nowRow + 1, nowColumn] == false)
             {
+                flg[nowRow + 1, nowColumn] = true;
                 if (nowDir != 'D')
                 {
                     que.Enqueue((nowRow + 1, nowColumn, nowDistance + 1, nowTurns + 1, 'D'));

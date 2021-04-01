@@ -35,10 +35,9 @@ public class MenuCallingAndListener : MonoBehaviour
 
         langText.text = "Lang : " + LangManager.calling("LangNameNative");
         langText.font = LangManager.textFont;
-
-        phaseText.text = LangManager.calling("P" + GameDataManager.getPhase());
         
         lastseenText.text = GameDataManager.lastSeen();
+        phaseText.text = LangManager.calling("P" + GameDataManager.getPhase());
 
         this.GetComponent<MenuNSerttingNMore>().doSetScreen("MainMenuPanel");
 
@@ -48,7 +47,6 @@ public class MenuCallingAndListener : MonoBehaviour
     {
         SettingData.resolutionIndex = ind;
         SettingData.applyVideo();
-        Debug.Log(SettingData.toString());
     }
 
     public void vChangeFullscreen(bool tog)
@@ -61,7 +59,6 @@ public class MenuCallingAndListener : MonoBehaviour
     {
         SettingData.graphicQuality = indQ;
         SettingData.applyVideo();
-        Debug.Log(SettingData.toString());
     }
 
     public void aChangeMaster(float value)
@@ -96,6 +93,7 @@ public class MenuCallingAndListener : MonoBehaviour
         langText.text = "Lang : " + LangManager.calling("LangNameNative");
         langText.font = LangManager.textFont;
         this.GetComponent<MenuNSerttingNMore>().doSetScreen("SettingPanel");
+        phaseText.text = LangManager.calling("P" + GameDataManager.getPhase());
     }
 
 }

@@ -152,7 +152,6 @@ public class SolveMazeBigControl : MonoBehaviour
             {
                 timeRem -= Time.deltaTime;
                 timeText.text = ((int)Mathf.Ceil(timeRem)).ToString("000");
-
             }
             else
             {
@@ -201,7 +200,7 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public void rePosition()
     {
-        float scale = Mathf.Min(7 / GameDataManager.getColumnMaze(),1f);
+        float scale = Mathf.Min(7f / GameDataManager.getColumnMaze(),1f);
 
         //5/4      16/9
         //-5.5 and -6.76
