@@ -10,6 +10,7 @@ public class MenuNSerttingNMore : MonoBehaviour
     public GameObject VideoPanel;
     public GameObject AudioPanel;
     public GameObject ContiPanel;
+    public GameObject NewGamePanel;
     //TODO : new Game
 
     // Start is called before the first frame update
@@ -20,6 +21,7 @@ public class MenuNSerttingNMore : MonoBehaviour
         SettingPanel.SetActive(screen == "SettingPanel");
         VideoPanel.SetActive(screen == "VideoPanel");
         AudioPanel.SetActive(screen == "AudioPanel");
+        NewGamePanel.SetActive(screen == "NewGamePanel");
         ContiPanel.SetActive(false);
     }
 
@@ -30,6 +32,7 @@ public class MenuNSerttingNMore : MonoBehaviour
         VideoPanel.SetActive(true);
         AudioPanel.SetActive(true);
         ContiPanel.SetActive(true);
+        NewGamePanel.SetActive(true);
     }
 
     public void gameCall()
