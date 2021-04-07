@@ -37,17 +37,47 @@ public class SettingData
     {
         
         string filePath = Application.dataPath + "/setting.json";
-        string jsonContent = File.ReadAllText(filePath);
 
-        SettingDataForObject holder = JsonUtility.FromJson<SettingDataForObject>(jsonContent);
+        if (File.Exists(filePath))
+        {
+            string jsonContent = File.ReadAllText(filePath);
 
-        SettingData.isFullScreen = holder.vf;
-        SettingData.resolutionIndex = holder.vr;
-        SettingData.graphicQuality = holder.vq;
-        SettingData.musicVolume = holder.mms;
-        SettingData.masterVolume = holder.mmt;
-        SettingData.soundVolume = holder.msf;
-        SettingData.langSelected = holder.ls;
+            SettingDataForObject holder = JsonUtility.FromJson<SettingDataForObject>(jsonContent);
+
+            SettingData.isFullScreen = holder.vf;
+            SettingData.resolutionIndex = holder.vr;
+            SettingData.graphicQuality = holder.vq;
+            SettingData.musicVolume = holder.mms;
+            SettingData.masterVolume = holder.mmt;
+            SettingData.soundVolume = holder.msf;
+            SettingData.langSelected = holder.ls;
+        }
+        else
+        {
+            //File not found
+
+            Resolution[] reses = Screen.resolutions;
+
+            isFullScreen = Screen.fullScreen;
+            resolutionIndex = 0;
+
+            for (int i = 0; i < reses.Length; i++)
+            {
+                if(reses[i].width == Screen.width && reses[i].height == Screen.height
+                    &&reses[i].refreshRate == Screen.currentResolution.refreshRate)
+                {
+                    resolutionIndex = i;
+                    break;
+                }
+            }
+
+            graphicQuality = QualitySettings.GetQualityLevel();
+
+            saveSetting();
+
+        }
+
+        
         applyAll();
     }
 
