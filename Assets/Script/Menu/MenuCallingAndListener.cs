@@ -35,7 +35,7 @@ public class MenuCallingAndListener : MonoBehaviour
 
         langText.text = "Lang : " + LangManager.calling("LangNameNative");
         langText.font = LangManager.textFont;
-        
+
         lastseenText.text = GameDataManager.lastSeen();
         phaseText.text = LangManager.calling("P" + GameDataManager.getPhase());
 
@@ -88,7 +88,16 @@ public class MenuCallingAndListener : MonoBehaviour
         GameObject[] gameO = GameObject.FindGameObjectsWithTag("ReloadLang");
         foreach (GameObject e in gameO)
         {
-            e.GetComponent<ReloadLangNow>().ReloadText();
+            ReloadLangNow r;
+            if (e.TryGetComponent(out r))
+            {
+                r.ReloadText();
+            }
+            ReloadLangMeshNow rm;
+            if (e.TryGetComponent(out rm))
+            {
+                rm.ReloadText();
+            }
         }
         langText.text = "Lang : " + LangManager.calling("LangNameNative");
         langText.font = LangManager.textFont;

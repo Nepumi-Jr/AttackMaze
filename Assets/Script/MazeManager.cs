@@ -191,6 +191,7 @@ public class MazeManager
             return;
         }
         posStart = new Vector2Int(row, column);
+        iscaled = false;
     }
 
     public void setEnd(int row, int column)
@@ -201,6 +202,7 @@ public class MazeManager
             return;
         }
         posEnd = new Vector2Int(row, column);
+        iscaled = false;
     }
 
     public Vector2Int getStart()

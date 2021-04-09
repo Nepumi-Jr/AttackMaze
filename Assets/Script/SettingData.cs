@@ -130,7 +130,16 @@ public class SettingData
         GameObject[] gameO = GameObject.FindGameObjectsWithTag("ReloadLang");
         foreach (GameObject e in gameO)
         {
-            e.GetComponent<ReloadLangNow>().ReloadText();
+            ReloadLangNow r;
+            if (e.TryGetComponent(out r))
+            {
+                r.ReloadText();
+            }
+            ReloadLangMeshNow rm;
+            if (e.TryGetComponent(out rm))
+            {
+                rm.ReloadText();
+            }
         }
 
     }

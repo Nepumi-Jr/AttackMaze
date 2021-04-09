@@ -121,7 +121,7 @@ public class EachPlayer : MonoBehaviour
         chara.SetActive(true);
         chara.transform.parent = this.transform;
         chara.transform.localScale = new Vector3(25f, 25f, 25f);
-        nowCharaPos = GameDataManager.player1Maze.getStart();
+        nowCharaPos = bigPMaze.getStart();
         chara.transform.localPosition = new Vector3(0f, 0f);
         chara.GetComponent<MeshRenderer>().material = charMaterial;
 

@@ -7,7 +7,6 @@ using TMPro;
 public class ContructBigControl : MonoBehaviour
 {
 
-
     public Text textDisDes;
     int curTurn = 1;
     bool duringTrans = true;
@@ -44,7 +43,30 @@ public class ContructBigControl : MonoBehaviour
      * 2 is sure ?
     */
 
+    public GameObject mazeButtonsPanel;
+    public Button[] toolsButtons = new Button[4];
+    public Color NormalButtonColor;
+    public Color HoverButtonColor;
+    public Color ActivateColor;
 
+    GameObject flgObject;
+    GameObject staObject;
+
+    short tool = 0;
+    /* 0 is wall
+     * 1 is Erase
+     * 2 is setStart
+     * 3 is setEnd
+    */
+
+    public GameObject DiffText;
+    public Button subButton;
+
+    Vector3 posMazeToV3(float row, float column)
+    {
+        return new Vector3(column * fieldWidth + fieldWidth / 2 - fieldWidth * columnMaze / 2,
+            (rowMaze - row - 1f) * fieldHeight + fieldHeight / 2 - fieldHeight * rowMaze / 2);
+    }
 
     void Start()
     {
@@ -54,6 +76,8 @@ public class ContructBigControl : MonoBehaviour
         fieldHeight = picBgField.rect.height / picBgField.pixelsPerUnit;
         float wallZoom = picBgField.rect.width;
         wallZoom /= Resources.Load<Sprite>("Texture/MazeField/CornerZ_Line").rect.width;
+        
+        
 
         if (GameDataManager.getPhase() == "ConP1")
         {
@@ -76,8 +100,18 @@ public class ContructBigControl : MonoBehaviour
         wallMaze = new GameObject[rowMaze + 1, columnMaze + 1];
         isWallCon = new short[rowMaze, columnMaze];
 
-        bigMaze.localPosition = new Vector3(fieldWidth / 2 - fieldWidth * columnMaze / 2,
-            fieldHeight / 2 - fieldHeight * rowMaze / 2);
+        scaleMaze = Mathf.Min(7f / rowMaze,1f);
+
+
+
+
+        bigMaze.localPosition = new Vector3(0f,-1f);
+        bigMaze.localScale = new Vector3(scaleMaze, scaleMaze);
+
+        DiffText.transform.parent = bigMaze.transform;
+        DiffText.transform.localPosition = new Vector3(columnMaze * fieldWidth / 2,
+            rowMaze * fieldHeight / 2+0.2f);
+        DiffText.transform.localScale = new Vector3(0.1f,0.1f);
 
 
         for (int i = 0; i < rowMaze; i++)
@@ -89,7 +123,8 @@ public class ContructBigControl : MonoBehaviour
                 tileMaze[i, j].transform.parent = bigMaze;
                 tileMaze[i, j].AddComponent<SpriteRenderer>();
                 tileMaze[i, j].GetComponent<SpriteRenderer>().sprite = picBgField;
-                tileMaze[i, j].transform.localPosition = new Vector3(j * fieldWidth, i * fieldHeight);
+                tileMaze[i, j].transform.localPosition = posMazeToV3(i, j);
+                tileMaze[i, j].transform.localScale = new Vector3(1f, 1f);
             }
         }
 
@@ -104,12 +139,26 @@ public class ContructBigControl : MonoBehaviour
                 wallMaze[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/CornerE_Line");
                 wallMaze[i, j].GetComponent<SpriteRenderer>().color = mainColor[curTurn - 1];
                 wallMaze[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBorder";
-                wallMaze[i, j].transform.localPosition = new Vector3((j - 0.5f) * fieldWidth, (rowMaze - i - 0.5f) * fieldHeight);
+                wallMaze[i, j].transform.localPosition = posMazeToV3(i - 0.5f, j - 0.5f) ;
                 wallMaze[i, j].transform.localScale = new Vector3(wallZoom, wallZoom, 1f);
 
             }
         }
+        flgObject = new GameObject("FLG");
+        flgObject.transform.parent = bigMaze;
+        flgObject.AddComponent<SpriteRenderer>();
+        flgObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish");
+        flgObject.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
+
+        staObject = new GameObject("STA");
+        staObject.transform.parent = bigMaze;
+        staObject.AddComponent<SpriteRenderer>();
+        staObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish");
+        staObject.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
+
+        reloadStartEnd();
         reloadWalls();
+        changeTool(0);
 
         StartCoroutine(waitTran(1f));
     }
@@ -117,6 +166,8 @@ public class ContructBigControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if(!duringTrans)
         {
             if (Input.GetKeyDown(KeyCode.Return))
@@ -142,6 +193,7 @@ public class ContructBigControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape) && phase == 2)
             {
                 animations.SetTrigger("BackEdit");
+                mazeButtonsPanel.SetActive(true);
                 StartCoroutine(waitTran(1f));
                 phase = 1;
                 StartCoroutine(inActiveThem());
@@ -153,7 +205,7 @@ public class ContructBigControl : MonoBehaviour
                 (int,int,char) result = fromPos(Input.mousePosition);
                 int tr = result.Item1;
                 int tc = result.Item2;
-                if (result.Item3 != '?')
+                if ((tool == 0 || tool == 1 ) && result.Item3 != '?')
                 {
                     if (true) //if mode is construct walls
                     {
@@ -196,13 +248,36 @@ public class ContructBigControl : MonoBehaviour
 
                         if (isNew)
                         {
-                            thisMaze.toggleWall(tr, tc, result.Item3);
-                            reloadWalls();
+                            if((tool == 1 && !thisMaze.isPass(tr, tc, result.Item3)) || tool == 0)
+                            {
+                                thisMaze.toggleWall(tr, tc, result.Item3);
+                                reloadWalls();
+                            }
                         }
                     }
                 }
+                
             }
-            else if (!mouseOffReset)
+            if(phase == 1 && Input.GetMouseButtonDown(0))
+            {
+                (int, int, char) result = fromPos(Input.mousePosition);
+                int tr = result.Item1;
+                int tc = result.Item2;
+                if ((tool == 2 || tool == 3) && result.Item3 == '?' && tr >= 0 && tc >= 0)
+                {
+                    if(tool == 2)
+                    {
+                        thisMaze.setStart(tr, tc);
+                    }
+                    else
+                    {
+                        thisMaze.setEnd(tr, tc);
+                    }
+                    reloadStartEnd();
+                    changeTool(0);
+                }
+            }
+            if (Input.GetMouseButtonUp(0) && !mouseOffReset)
             {
                 for(int i = 0; i < rowMaze; i++)
                 {
@@ -270,13 +345,15 @@ public class ContructBigControl : MonoBehaviour
             Screen.width - (Screen.width - mazeWidth) / 2f,
              (Screen.height - mazeHeight) / 2f);
 
+        float mouseTranY = mousePos.y + mazeHeight / rowMaze / scaleMaze;
+        float mouseTranX = mousePos.x;
 
-        if(mousePos.x >= ULMaze.x && mousePos.x <= DRMaze.x &&
-            mousePos.y <= ULMaze.y && mousePos.y >= DRMaze.y)
+        if (mouseTranX >= ULMaze.x && mouseTranX <= DRMaze.x &&
+            mouseTranY <= ULMaze.y && mouseTranY >= DRMaze.y)
         {
 
-            float tileX = (mousePos.x - ULMaze.x) * columnMaze / mazeWidth;
-            float tileY = rowMaze - (mousePos.y - DRMaze.y) * rowMaze / mazeHeight;
+            float tileX = (mouseTranX - ULMaze.x) * columnMaze / mazeWidth;
+            float tileY = rowMaze - (mouseTranY - DRMaze.y) * rowMaze / mazeHeight;
 
             short dirCode = 0;
 
@@ -394,6 +471,7 @@ public class ContructBigControl : MonoBehaviour
 
             }
         }
+        reloadDiffMaze();
     }
 
     public void subMaze()
@@ -401,6 +479,9 @@ public class ContructBigControl : MonoBehaviour
         //Calculate maze here
         if (true)
         {
+            mazeButtonsPanel.SetActive(false);
+
+
             foreach (GameObject e in overButton)
             {
                 e.SetActive(true);
@@ -408,6 +489,92 @@ public class ContructBigControl : MonoBehaviour
             animations.SetTrigger("Submit");
             phase = 2;
         }
+    }
+
+    public void resetMaze()
+    {
+        thisMaze = new MazeManager(rowMaze,columnMaze);
+        reloadWalls();
+        reloadStartEnd();
+        changeTool(0);
+    }
+
+    public void changeTool(int id)
+    {
+        /* 0 is wall
+         * 1 is Erase
+         * 2 is setStart
+         * 3 is setEnd
+        */
+
+        ColorBlock notSe = new ColorBlock
+        {
+            normalColor = NormalButtonColor,
+            highlightedColor = HoverButtonColor,
+            pressedColor = ActivateColor,
+            selectedColor = ActivateColor,
+            colorMultiplier = 2f,
+            fadeDuration = 0.1f
+            
+        };
+
+        ColorBlock Se = new ColorBlock
+        {
+            normalColor = ActivateColor,
+            highlightedColor = ActivateColor,
+            pressedColor = ActivateColor,
+            selectedColor = ActivateColor,
+            colorMultiplier = 2f,
+            fadeDuration = 0.1f
+        };
+
+        for (int i = 0; i < 4; i++)
+        {
+            toolsButtons[i].colors = notSe;
+        }
+        toolsButtons[id].colors = Se;
+
+        tool = (short)id;
+
+    }
+
+    void reloadStartEnd()
+    {
+        staObject.SetActive(thisMaze.getStart().x != -1 && thisMaze.getStart().y != -1);
+        flgObject.SetActive(thisMaze.getEnd().x != -1 && thisMaze.getEnd().y != -1);
+
+        staObject.transform.localPosition = posMazeToV3(thisMaze.getStart().x, thisMaze.getStart().y);
+        staObject.transform.localScale = new Vector3(scaleMaze, scaleMaze, 1f);
+        flgObject.transform.localPosition = posMazeToV3(thisMaze.getEnd().x, thisMaze.getEnd().y);
+        flgObject.transform.localScale = new Vector3(scaleMaze, scaleMaze, 1f);
+        reloadDiffMaze();
+    }
+
+    void reloadDiffMaze()
+    {
+        TextMesh thisTextDiff = DiffText.GetComponent<TextMesh>();
+        float diff = thisMaze.getDifficultyMaze();
+        bool isSolve = false;
+        if (diff == -1)
+        {
+            thisTextDiff.text = LangManager.calling("CDNoStart");
+        }
+        else if(diff == -2)
+        {
+            thisTextDiff.text = LangManager.calling("CDNoEnd");
+        }
+        else if(diff == -3)
+        {
+            thisTextDiff.text = LangManager.calling("CDUnsol");
+        }
+        else
+        {
+            isSolve = true;
+            thisTextDiff.text = string.Format(LangManager.calling("CDDiff"), diff);
+        }
+
+        subButton.interactable = isSolve;
+
     }
 
 }

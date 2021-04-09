@@ -44,7 +44,8 @@ public class MenuNSerttingNMore : MonoBehaviour
         }
         else
         {
-            //TODO : new game
+            NewGamePanel.SetActive(true);
+            MainMenuPanel.SetActive(false);
         }
     }
 

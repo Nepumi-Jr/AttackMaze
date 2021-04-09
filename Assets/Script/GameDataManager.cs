@@ -13,9 +13,17 @@ public class GameDataManager
 
     static bool isLoaded = false;
 
+    public static void init()
+    {
+        player1Maze = new MazeManager(5, 5);
+        player2Maze = new MazeManager(5, 5);
+        phase = "ConP1";
+        timeStamp = new DateTimeOffset(DateTime.Now).ToString();
+    }
+
     public GameDataManager()
     {
-        timeStamp = new DateTimeOffset(DateTime.Now).ToString();
+        init();
     }
 
     public static void saveGame()
@@ -37,6 +45,13 @@ public class GameDataManager
         player1Maze = new MazeManager();
         player2Maze = new MazeManager();
         isLoaded = true;
+
+        if (!File.Exists(SAVE_PATH))
+        {
+            init();
+            return;
+        }
+
 
         string[] content = File.ReadAllLines(SAVE_PATH);
         player1Maze.loadMaze(content[0].Replace("P1 Maze:", ""));

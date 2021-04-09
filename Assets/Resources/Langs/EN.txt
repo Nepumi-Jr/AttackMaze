@@ -119,6 +119,9 @@ P{0}'s Maze
 [CBSub]
 Submit
 
+[CBRes]
+Reset
+
 [CBFin]
 Set finish
 
@@ -127,6 +130,18 @@ Set start
 
 [CBwall]
 Set wall
+
+[CDNoStart]
+Start tile not found...
+
+[CDNoEnd]
+Flag tile not found...
+
+[CDUnsol]
+Unsolvable maze
+
+[CDDiff]
+Difficulty : {0}
 
 
 
