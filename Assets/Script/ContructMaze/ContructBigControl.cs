@@ -18,6 +18,7 @@ public class ContructBigControl : MonoBehaviour
     public Transform bigMaze;
     GameObject[,] tileMaze;
     GameObject[,] wallMaze;
+    GameObject[,] wallLMaze;
     int rowMaze;
     int columnMaze;
     float fieldWidth;
@@ -61,6 +62,7 @@ public class ContructBigControl : MonoBehaviour
 
     public GameObject DiffText;
     public Button subButton;
+    public BGMManager mainBGM;
 
     Vector3 posMazeToV3(float row, float column)
     {
@@ -98,6 +100,7 @@ public class ContructBigControl : MonoBehaviour
 
         tileMaze = new GameObject[rowMaze, columnMaze];
         wallMaze = new GameObject[rowMaze + 1, columnMaze + 1];
+        wallLMaze = new GameObject[rowMaze + 1, columnMaze + 1];
         isWallCon = new short[rowMaze, columnMaze];
 
         scaleMaze = Mathf.Min(7f / rowMaze,1f);
@@ -139,8 +142,18 @@ public class ContructBigControl : MonoBehaviour
                 wallMaze[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/CornerE_Line");
                 wallMaze[i, j].GetComponent<SpriteRenderer>().color = mainColor[curTurn - 1];
                 wallMaze[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBorder";
-                wallMaze[i, j].transform.localPosition = posMazeToV3(i - 0.5f, j - 0.5f) ;
+                wallMaze[i, j].transform.localPosition = posMazeToV3(i - 0.5f, j - 0.5f);
                 wallMaze[i, j].transform.localScale = new Vector3(wallZoom, wallZoom, 1f);
+
+                wallLMaze[i, j] = new GameObject(
+                    string.Format("wallL[{0},{1}]", i, j));
+                wallLMaze[i, j].transform.parent = bigMaze;
+                wallLMaze[i, j].AddComponent<SpriteRenderer>();
+                wallLMaze[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/CornerE_Line");
+                wallLMaze[i, j].GetComponent<SpriteRenderer>().color = mainColor[curTurn - 1];
+                wallLMaze[i, j].GetComponent<SpriteRenderer>().sortingLayerName = "MazeBorder";
+                wallLMaze[i, j].transform.localPosition = posMazeToV3(i - 0.5f, j - 0.5f);
+                wallLMaze[i, j].transform.localScale = new Vector3(wallZoom, wallZoom, 1f);
 
             }
         }
@@ -174,12 +187,14 @@ public class ContructBigControl : MonoBehaviour
             {
                 if (phase == 0)
                 {
+                    mainBGM.startPlaying();
                     phase = 1;
                     animations.SetTrigger("WarnEnter");
                     StartCoroutine(inActiveThem());
                 }
                 if (phase == 2)
                 {
+                    mainBGM.fadeVolume(0f, 1.2f);
                     phase = 3;
                     animations.SetTrigger("Proceed");
                     
@@ -466,8 +481,8 @@ public class ContructBigControl : MonoBehaviour
                 wallMaze[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Corner" + tran.Item1 + "_Line");
                 wallMaze[i, j].transform.localRotation = Quaternion.Euler(0f, 0f, 90f * tran.Item2);
 
-                //borderLight[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Corner" + tran.Item1 + "_Light");
-                //borderLight[i, j].transform.localRotation = Quaternion.Euler(0f, 0f, 90f * tran.Item2);
+                wallLMaze[i, j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Corner" + tran.Item1 + "_Light");
+                wallLMaze[i, j].transform.localRotation = Quaternion.Euler(0f, 0f, 90f * tran.Item2);
 
             }
         }
@@ -480,6 +495,7 @@ public class ContructBigControl : MonoBehaviour
         if (true)
         {
             mazeButtonsPanel.SetActive(false);
+            mainBGM.fadeVolume(0.6f, 1.2f);
 
 
             foreach (GameObject e in overButton)
@@ -575,6 +591,18 @@ public class ContructBigControl : MonoBehaviour
 
         subButton.interactable = isSolve;
 
+    }
+
+    public void setLightOpaci(float opa)
+    {
+        for (int i = 0; i < rowMaze + 1; i++)
+        {
+            for (int j = 0; j < columnMaze + 1; j++)
+            {
+                wallLMaze[i, j].GetComponent<SpriteRenderer>().color = new Color(mainColor[curTurn - 1].r,
+                    mainColor[curTurn - 1].g, mainColor[curTurn - 1].b, opa);
+            }
+        }
     }
 
 }

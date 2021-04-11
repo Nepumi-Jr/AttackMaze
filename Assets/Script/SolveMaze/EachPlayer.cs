@@ -122,7 +122,7 @@ public class EachPlayer : MonoBehaviour
         chara.transform.parent = this.transform;
         chara.transform.localScale = new Vector3(25f, 25f, 25f);
         nowCharaPos = bigPMaze.getStart();
-        chara.transform.localPosition = new Vector3(0f, 0f);
+        chara.transform.localPosition = new Vector3(0f, 0f, 10f);
         chara.GetComponent<MeshRenderer>().material = charMaterial;
 
         for (int i = 0; i < rowMaze + 1; i++)
