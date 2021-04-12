@@ -12,8 +12,19 @@ public class MenuNSerttingNMore : MonoBehaviour
     public GameObject ContiPanel;
     public GameObject NewGamePanel;
     //TODO : new Game
+    public BGMManager BGM;
+    bool ff = false;
 
     // Start is called before the first frame update
+    private void Update()
+    {
+        if (!ff)
+        {
+            ff = true;
+            BGM.startPlaying();
+        }
+        
+    }
 
     public void doSetScreen(string screen)
     {
@@ -23,6 +34,7 @@ public class MenuNSerttingNMore : MonoBehaviour
         AudioPanel.SetActive(screen == "AudioPanel");
         NewGamePanel.SetActive(screen == "NewGamePanel");
         ContiPanel.SetActive(false);
+        BGM.fadeVolume((screen == "SettingPanel" || screen == "VideoPanel") ? 0.6f : 1f, 2f);
     }
 
     public void openUpTheSky()
@@ -51,7 +63,8 @@ public class MenuNSerttingNMore : MonoBehaviour
 
     public void gameContinue()
     {
-        if(GameDataManager.getPhase() == "Solving")
+        BGM.fadeVolume(0f, 20f);
+        if (GameDataManager.getPhase() == "Solving")
         {
             ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.SolveMaze);
         }

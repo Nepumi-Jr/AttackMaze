@@ -44,6 +44,7 @@ public class SettingData
 
             SettingDataForObject holder = JsonUtility.FromJson<SettingDataForObject>(jsonContent);
 
+
             SettingData.isFullScreen = holder.vf;
             SettingData.resolutionIndex = holder.vr;
             SettingData.graphicQuality = holder.vq;

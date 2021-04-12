@@ -11,24 +11,30 @@ public class BGMManager : MonoBehaviour
 
 
     AudioSource mainAS;
+    AudioSource loopAS;
 
     bool isPlayed = false;
+    bool loopYet = false;
     float bigVol = 1f;
     float bigSpeed = 1f;
     float tim = 0;
 
-    public float[] beatSample = new float[1];
+    public float[] beatSample = new float[8];
 
-    public void startPlaying()
+    public void startPlaying(float offset = 0f)
     {
         if (!isPlayed)
         {
             isPlayed = true;
             mainAS = transform.GetChild(0).GetComponent<AudioSource>();
-            mainAS.PlayOneShot(mainStart);
-            mainAS.loop = false;
+            loopAS = transform.GetChild(1).GetComponent<AudioSource>();
 
-            StartCoroutine(startLoop(mainStart.length));
+            loopAS.loop = true;
+            loopAS.clip = mainLoop;
+            mainAS.loop = false;
+            
+            StartCoroutine(startLoop(mainStart.length - offset));
+            
         }
         
     }
@@ -46,46 +52,23 @@ public class BGMManager : MonoBehaviour
 
     private IEnumerator startLoop(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime);
-        mainAS.loop = true;
-        mainAS.clip = mainLoop;
-
-        mainAS.Play();
+        mainAS.PlayOneShot(mainStart);
+        yield return new WaitForSeconds(Mathf.Max(0f, waitTime));
+        loopAS.Play();
+        loopYet = true;
     }
 
     private void Update()
     {
 
-        float opa = 0f;
         if (isPlayed)
         {
             if (bigVol != mainAS.volume)
             {
+                loopAS.volume = Mathf.Lerp(mainAS.volume, bigVol, Time.deltaTime * bigSpeed);
                 mainAS.volume = Mathf.Lerp(mainAS.volume, bigVol, Time.deltaTime * bigSpeed);
-                Debug.Log(mainAS.volume);
+
             }
-
-            if (QualitySettings.GetQualityLevel() >= 1)
-            {
-                mainAS.GetOutputData(beatSample, 0);
-                float newOpa = Mathf.Clamp01(Mathf.Log(Mathf.Max(beatSample[0] / 0.1f, 0f)) + 1);
-                opa = newOpa;
-            }
-
-            
-
-        }
-        if (QualitySettings.GetQualityLevel() == 1)
-        {
-            tim += Time.deltaTime;
-            tim %= 2 * Mathf.PI;
-
-            opa = Mathf.Sin(tim);
-        }
-
-        if (CBC != null)
-        {
-            CBC.setLightOpaci(opa);
         }
 
 

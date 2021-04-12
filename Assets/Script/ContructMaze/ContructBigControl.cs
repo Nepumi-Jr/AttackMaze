@@ -24,7 +24,6 @@ public class ContructBigControl : MonoBehaviour
     float fieldWidth;
     float fieldHeight;
 
-    public Text Debuggg;
     public PauseManager pauseBruh;
 
     const float heightPercent = 0.1f;//Put your magic number here :)
@@ -63,6 +62,7 @@ public class ContructBigControl : MonoBehaviour
     public GameObject DiffText;
     public Button subButton;
     public BGMManager mainBGM;
+    public float lightWallOpa;
 
     Vector3 posMazeToV3(float row, float column)
     {
@@ -304,6 +304,15 @@ public class ContructBigControl : MonoBehaviour
                 mouseOffReset = true;
             }
         }
+
+        
+        if (QualitySettings.GetQualityLevel() > 1)
+        {
+            lightWallOpa += Time.deltaTime * 0.1f;
+            lightWallOpa %= Mathf.PI * 2;
+            setLightOpaci((Mathf.Sin(lightWallOpa) + 1f) / 2f) ;
+        }
+
     }
 
     IEnumerator waitTran(float halt)
@@ -384,18 +393,15 @@ public class ContructBigControl : MonoBehaviour
             else if (dirCode == 8) dir = 'L';
 
 
-            Debuggg.text = string.Format("InMaze\n<{0},{1} dir {2}>", (int)tileY, (int)tileX, dir);
             
             if (((int)tileY == 0 && dir == 'U') || ((int)tileY == rowMaze - 1 && dir == 'D')
                 || ((int)tileX == 0 && dir == 'L') || ((int)tileX == columnMaze - 1 && dir == 'R'))
             {
-                Debuggg.text = string.Format("InMaze\nNOPE <{0},{1} dir {2}>", (int)tileY, (int)tileX, dir);
                 return (-1, -1, '?');
             }
 
                 return ((int)tileY, (int)tileX, dir);
         }
-        Debuggg.text = "NOT In Maze";
 
         return (-1, -1, '?');
     }

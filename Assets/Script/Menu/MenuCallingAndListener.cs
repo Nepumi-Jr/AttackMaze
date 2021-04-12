@@ -71,6 +71,7 @@ public class MenuCallingAndListener : MonoBehaviour
         SettingData.musicVolume = value;
         SettingData.applySound();
     }
+
     public void aChangeSFX(float value)
     {
         SettingData.soundVolume = value;
