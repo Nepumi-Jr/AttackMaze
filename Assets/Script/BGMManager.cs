@@ -14,10 +14,8 @@ public class BGMManager : MonoBehaviour
     AudioSource loopAS;
 
     bool isPlayed = false;
-    bool loopYet = false;
     float bigVol = 1f;
     float bigSpeed = 1f;
-    float tim = 0;
 
     public float[] beatSample = new float[8];
 
@@ -55,7 +53,6 @@ public class BGMManager : MonoBehaviour
         mainAS.PlayOneShot(mainStart);
         yield return new WaitForSeconds(Mathf.Max(0f, waitTime));
         loopAS.Play();
-        loopYet = true;
     }
 
     private void Update()
@@ -72,6 +69,18 @@ public class BGMManager : MonoBehaviour
         }
 
 
+    }
+
+    public void ChangeSongAndPlay(AudioClip startClip,AudioClip loopClip)
+    {
+        mainLoop = loopClip;
+        mainStart = startClip;
+
+        loopAS.loop = true;
+        loopAS.clip = mainLoop;
+        mainAS.loop = false;
+
+        StartCoroutine(startLoop(mainStart.length));
     }
 
 }
