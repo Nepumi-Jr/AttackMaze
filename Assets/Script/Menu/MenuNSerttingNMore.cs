@@ -74,6 +74,12 @@ public class MenuNSerttingNMore : MonoBehaviour
         }
     }
 
+    public void gameNew()
+    {
+        BGM.fadeVolume(0f, 20f);
+        ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.ContructMaze);
+    }
+
     public void ExitGame()
     {
         Application.Quit();

@@ -92,7 +92,10 @@ public class ContructBigControl : MonoBehaviour
             thisMaze = GameDataManager.player2Maze;
         }
 
+        textDisDes.font = LangManager.textFont;
         textDisDes.text = string.Format(LangManager.calling("CDisDes"), curTurn, curTurn == 1 ? 2 : 1);
+
+        bigMazeText.font = TMP_FontAsset.CreateFontAsset(LangManager.titleTextFont);
         bigMazeText.text = string.Format(LangManager.calling("CMaze"), curTurn);
 
         rowMaze = GameDataManager.getRowMaze();
@@ -282,10 +285,18 @@ public class ContructBigControl : MonoBehaviour
                 {
                     if(tool == 2)
                     {
+                        if(thisMaze.getEnd().x == tr && thisMaze.getEnd().y == tc)
+                        {
+                            thisMaze.setEnd(-1, -1);
+                        }
                         thisMaze.setStart(tr, tc);
                     }
                     else
                     {
+                        if (thisMaze.getStart().x == tr && thisMaze.getStart().y == tc)
+                        {
+                            thisMaze.setStart(-1, -1);
+                        }
                         thisMaze.setEnd(tr, tc);
                     }
                     reloadStartEnd();
@@ -515,7 +526,7 @@ public class ContructBigControl : MonoBehaviour
 
     public void resetMaze()
     {
-        thisMaze = new MazeManager(rowMaze,columnMaze);
+        thisMaze.reMaze();
         reloadWalls();
         reloadStartEnd();
         changeTool(0);

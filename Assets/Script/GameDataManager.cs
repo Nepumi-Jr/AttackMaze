@@ -10,6 +10,7 @@ public class GameDataManager
     public static MazeManager player1Maze, player2Maze;
     protected static string timeStamp;
     protected static string phase;
+    public static bool itemAss;
 
     static bool isLoaded = false;
 
@@ -19,6 +20,7 @@ public class GameDataManager
         player2Maze = new MazeManager(5, 5);
         phase = "ConP1";
         timeStamp = new DateTimeOffset(DateTime.Now).ToString();
+        itemAss = false;
     }
 
     public GameDataManager()
@@ -35,6 +37,7 @@ public class GameDataManager
         dumping.Add("P2 Maze:" + player2Maze.dumpMaze());
         dumping.Add("phase:" + phase);
         dumping.Add("Last seen:" + timeStamp);
+        dumping.Add("Item:" + (itemAss ? "1" : "0"));
 
         File.WriteAllLines(SAVE_PATH, dumping);
     }
@@ -58,6 +61,14 @@ public class GameDataManager
         player2Maze.loadMaze(content[1].Replace("P2 Maze:", ""));
         phase = content[2].Replace("phase:", "");
         timeStamp = content[3].Replace("Last seen:", "");
+        itemAss = content[4] == "Item:1";
+
+    }
+
+    public static void ResetIt()
+    {
+        string SAVE_PATH = Application.dataPath + "/data.fgm";
+        File.Delete(SAVE_PATH);
     }
 
     public static void setPhase(string phasee)

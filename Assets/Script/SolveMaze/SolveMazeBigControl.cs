@@ -118,6 +118,9 @@ public class SolveMazeBigControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) && endGame && !backToMenu)
         {
+
+            GameDataManager.ResetIt();
+
             ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.MainMenu);
             backToMenu = true;
         }

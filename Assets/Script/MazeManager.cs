@@ -13,6 +13,8 @@ public class MazeManager
     private Vector2Int posStart;
     private Vector2Int posEnd;
 
+    public bool[,] playable;
+
     private void initMaze()
     {
         posStart = new Vector2Int(-1, -1);
@@ -62,6 +64,12 @@ public class MazeManager
     {
         this.gridRow = gridRow;
         this.gridColumn = gridColumn;
+        initMaze();
+    }
+
+    public void reMaze()
+    {
+        iscaled = false;
         initMaze();
     }
 
@@ -187,8 +195,7 @@ public class MazeManager
     {
         if (!isPosInMaze(new Vector2Int(row, column)))
         {
-            Debug.LogError("Maze : set start oversize");
-            return;
+            Debug.LogWarning("Maze : set start oversize");
         }
         posStart = new Vector2Int(row, column);
         iscaled = false;
@@ -198,8 +205,7 @@ public class MazeManager
     {
         if (!isPosInMaze(new Vector2Int(row, column)))
         {
-            Debug.LogError("Maze : set start oversize");
-            return;
+            Debug.LogWarning("Maze : set start oversize");
         }
         posEnd = new Vector2Int(row, column);
         iscaled = false;
@@ -229,9 +235,60 @@ public class MazeManager
             return;
         }
 
-        bool[,] flg = new bool[gridRow, gridColumn];
 
-        //BFS goes here
+        int walls = 0;
+        for(int i = 0; i < gridRow - 1; i++)
+        {
+            for(int j = 0; j < gridColumn - 1; j++) {
+
+                if (!isPass(i, j, 'R')) walls++;
+                if (!isPass(i, j, 'D')) walls++;
+            }
+        }
+
+
+        bool[,] flg = new bool[gridRow, gridColumn];
+        //BFS Area goes here
+        Queue<(int, int)> quea = new Queue<(int, int)>();
+        playable = new bool[gridRow, gridColumn];
+        playable[posStart.x, posStart.y] = true;
+        quea.Enqueue((posStart.x, posStart.y));
+        while(quea.Count > 0)
+        {
+            (int, int) now = quea.Dequeue();
+            int nowRow = now.Item1;
+            int nowColumn = now.Item2;
+            //Left side
+            if (nowColumn > 0 && ((mazeField[nowRow, nowColumn] & 8) != 0) && playable[nowRow, nowColumn - 1] == false)
+            {
+                playable[nowRow, nowColumn - 1] = true;
+                quea.Enqueue((nowRow, nowColumn - 1));
+            }
+
+            //right side
+            if (nowColumn + 1 < gridColumn && ((mazeField[nowRow, nowColumn] & 2) != 0) && playable[nowRow, nowColumn + 1] == false)
+            {
+                playable[nowRow, nowColumn + 1] = true;
+                quea.Enqueue((nowRow, nowColumn + 1));
+            }
+
+            //Up side
+            if (nowRow > 0 && ((mazeField[nowRow, nowColumn] & 1) != 0) && playable[nowRow - 1, nowColumn] == false)
+            {
+                playable[nowRow - 1, nowColumn] = true;
+                quea.Enqueue((nowRow - 1, nowColumn));
+            }
+
+            //right side
+            if (nowRow + 1 < gridRow && ((mazeField[nowRow, nowColumn] & 4) != 0) && playable[nowRow + 1, nowColumn] == false)
+            {
+                playable[nowRow + 1, nowColumn] = true;
+                quea.Enqueue((nowRow + 1, nowColumn));
+            }
+        }
+
+
+        //BFS maze goes here
         Queue<(int, int, int, int, char)> que = new Queue<(int, int, int, int, char)>();
 
         que.Enqueue((posStart.x, posStart.y, 0, 0, '?'));
@@ -247,7 +304,18 @@ public class MazeManager
 
             if (new Vector2Int(nowRow, nowColumn) == posEnd)
             {
-                diffMaze = nowDistance * 0.1f + nowTurns * 1.2f;
+
+                int misPath = 0;
+                for(int i = 0; i < gridRow; i++)
+                {
+                    for(int j=0;j < gridColumn; j++)
+                    {
+                        if (flg[i, j]) misPath--;
+                        if (playable[i, j]) misPath++;
+                    }
+                } 
+
+                diffMaze = nowDistance * 0.1f + nowTurns * 1.2f + walls * 0.05f + misPath * 0.12f;
                 return;
             }
 

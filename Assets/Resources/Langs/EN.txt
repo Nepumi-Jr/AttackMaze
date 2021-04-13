@@ -94,6 +94,12 @@ New Game
 [MCNewWarn]
 (Previous game will lost)
 
+[MNsize]
+Maze size
+
+[MNitem]
+Item Assist
+
 
 [CDisc]// Contruct phase goes here
 Disclaimer

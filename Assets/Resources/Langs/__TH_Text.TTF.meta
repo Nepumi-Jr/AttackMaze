@@ -12,9 +12,9 @@ TrueTypeFontImporter:
   fontNames:
   - FreesiaUPC
   fallbackFontReferences:
-  - {fileID: 12800000, guid: 34a6c5a470151644cb56306a46dea61d, type: 3}
-  - {fileID: 12800000, guid: a2dd9c38d048fa148ade57dda028261f, type: 3}
-  - {fileID: 12800000, guid: 606d6acff1e40eb42927d000c6869b42, type: 3}
+  - {instanceID: 0}
+  - {instanceID: 0}
+  - {instanceID: 0}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

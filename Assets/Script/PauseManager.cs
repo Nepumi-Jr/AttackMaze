@@ -13,7 +13,8 @@ public class PauseManager : MonoBehaviour
     public void callPause()
     {
         isPause = !isPause;
-        BgmMain.fadeVolume(isPause ? 0.2f : 1, 1.5f);
+        if(BgmMain != null)
+            BgmMain.fadeVolume(isPause ? 0.2f : 1, 1.5f);
         pauseObject.SetActive(isPause);
 
     }
