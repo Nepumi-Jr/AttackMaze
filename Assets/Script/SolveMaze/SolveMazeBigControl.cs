@@ -7,10 +7,6 @@ using TMPro;
 public class SolveMazeBigControl : MonoBehaviour
 {
 
-    
-    AudioSource audioSource;
-    public AudioClip BGM;
-
     public EachPlayer p1Field;
     public EachPlayer p2Field;
     Animator animator;
@@ -46,14 +42,14 @@ public class SolveMazeBigControl : MonoBehaviour
 
     PauseManager thisPause;
 
+    public BGMManager Bgm;
+
     // Start is called before the first frame update
     void Start()
     {
 
-        audioSource = GetComponent<AudioSource>();
-        audioSource.loop = true;
-        audioSource.clip = BGM;
-        audioSource.Play();
+        Bgm.fadeVolume(0.4f);
+        Bgm.startPlaying();
 
         animator = GetComponent<Animator>();
 
@@ -95,15 +91,14 @@ public class SolveMazeBigControl : MonoBehaviour
     {
         WhatMeme.SetActive(true);
         cheatAppear.SetActive(true);
-        audioSource.clip = WhatMusic;
-        audioSource.Play();
+        Bgm.ChangeSongAndPlay(WhatMusic, WhatMusic);
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        audioSource.GetOutputData(beatSample, 0);
+        
         
         tim += Time.deltaTime;
         tim %=  2 * Mathf.PI;
@@ -120,6 +115,7 @@ public class SolveMazeBigControl : MonoBehaviour
         {
 
             GameDataManager.ResetIt();
+            Bgm.fadeVolume(0f, 2f);
 
             ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.MainMenu);
             backToMenu = true;
@@ -133,6 +129,7 @@ public class SolveMazeBigControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) && waitForPlayer && !thisPause.isPause)
         {
             waitForPlayer = false;
+            Bgm.fadeVolume(1f);
 
             if (isCheat)
             {
@@ -160,6 +157,7 @@ public class SolveMazeBigControl : MonoBehaviour
             {
                 timeText.text = "000";
                 timeOut();
+                
             }
         }
 
@@ -225,6 +223,7 @@ public class SolveMazeBigControl : MonoBehaviour
 
     IEnumerator transitToAnother()
     {
+        Bgm.fadeVolume(0.5f,0.8f);
         yield return new WaitForSeconds(3);
         ReloadText();
         rePosition();
@@ -232,6 +231,7 @@ public class SolveMazeBigControl : MonoBehaviour
         timeText.text = ((int)Mathf.Ceil(timeRem)).ToString("000");
         waitForPlayer = true;
         duringTransit = false;
+        Bgm.fadeVolume(1f, 0.8f);
     }
 
     public void GameWon(int player,Color pColor)

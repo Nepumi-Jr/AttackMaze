@@ -3829,7 +3829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23ccfa4c303f17546b75984e05c6074e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainStart: {fileID: 8300000, guid: d82da5c20fcccbb44ae7a2fd30819815, type: 3}
+  mainStart: {fileID: 8300000, guid: 91e0ecc5069bfb3499af505fec3dfe7d, type: 3}
   mainLoop: {fileID: 8300000, guid: 39b5c25571b44a14881f25bea7b48e7c, type: 3}
   CBC: {fileID: 0}
   beatSample:
