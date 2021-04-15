@@ -281,7 +281,7 @@ public class ContructBigControl : MonoBehaviour
                 (int, int, char) result = fromPos(Input.mousePosition);
                 int tr = result.Item1;
                 int tc = result.Item2;
-                if ((tool == 2 || tool == 3) && result.Item3 == '?' && tr >= 0 && tc >= 0)
+                if ((tool == 2 || tool == 3) && tr >= 0 && tc >= 0)
                 {
                     if(tool == 2)
                     {

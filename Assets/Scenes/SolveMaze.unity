@@ -5613,6 +5613,8 @@ MonoBehaviour:
   par1: {fileID: 1092025489}
   par2: {fileID: 629284110}
   Bgm: {fileID: 240139971}
+  VicIntro: {fileID: 8300000, guid: e03a6ff8cc0437842ba51a7550b6c60c, type: 3}
+  VicLoop: {fileID: 8300000, guid: 518c15bc12c5e334b8fc81241466f97f, type: 3}
 --- !u!4 &688323348
 Transform:
   m_ObjectHideFlags: 0

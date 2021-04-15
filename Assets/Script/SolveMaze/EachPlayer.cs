@@ -41,6 +41,7 @@ public class EachPlayer : MonoBehaviour
 
     public Material charMaterial;
     bool boomEnd = false;
+    (Vector2Int, char) items;
 
 
 
@@ -387,6 +388,11 @@ public class EachPlayer : MonoBehaviour
             bigControl.GameWon(player, mainColor);
         }
 
+
+    }
+
+    public void doAddItem()
+    {
 
     }
 }

@@ -16,6 +16,8 @@ public class BGMManager : MonoBehaviour
     bool isPlayed = false;
     float bigVol = 1f;
     float bigSpeed = 1f;
+    float timWait = 0f;
+    bool isLoopPlayed = true;
 
     public float[] beatSample = new float[8];
 
@@ -30,8 +32,10 @@ public class BGMManager : MonoBehaviour
             loopAS.loop = true;
             loopAS.clip = mainLoop;
             mainAS.loop = false;
-            
-            StartCoroutine(startLoop(mainStart.length - offset));
+
+            mainAS.PlayOneShot(mainStart);
+            timWait = mainStart.length - offset - 0.1f;
+            isLoopPlayed = false;
             
         }
         
@@ -48,12 +52,6 @@ public class BGMManager : MonoBehaviour
     }
 
 
-    private IEnumerator startLoop(float waitTime)
-    {
-        mainAS.PlayOneShot(mainStart);
-        yield return new WaitForSeconds(Mathf.Max(0f, waitTime));
-        loopAS.Play();
-    }
 
     private void Update()
     {
@@ -68,11 +66,27 @@ public class BGMManager : MonoBehaviour
             }
         }
 
+        if (!isLoopPlayed)
+        {
+            if(timWait - Time.deltaTime >= 0f)
+            {
+                timWait -= Time.deltaTime;
+            }
+            else
+            {
+                loopAS.Play();
+                isLoopPlayed = true;
+            }
+        }
+
 
     }
 
     public void ChangeSongAndPlay(AudioClip startClip,AudioClip loopClip)
     {
+        mainAS.Stop();
+        loopAS.Stop();
+
         mainLoop = loopClip;
         mainStart = startClip;
 
@@ -80,7 +94,9 @@ public class BGMManager : MonoBehaviour
         loopAS.clip = mainLoop;
         mainAS.loop = false;
 
-        StartCoroutine(startLoop(mainStart.length));
+        mainAS.PlayOneShot(mainStart);
+        timWait = mainStart.length;
+        isLoopPlayed = false;
     }
 
 }

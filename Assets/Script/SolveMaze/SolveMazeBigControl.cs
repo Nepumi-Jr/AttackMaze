@@ -44,6 +44,9 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public BGMManager Bgm;
 
+    public AudioClip VicIntro;
+    public AudioClip VicLoop;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -238,6 +241,7 @@ public class SolveMazeBigControl : MonoBehaviour
     {
         if (!isCheat)
         {
+            Bgm.ChangeSongAndPlay(VicIntro, VicLoop);
             endGame = true;
             duringTransit = true;
             p1Field.isPlayable = false;
