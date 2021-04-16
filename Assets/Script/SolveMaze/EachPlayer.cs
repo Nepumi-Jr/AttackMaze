@@ -41,7 +41,12 @@ public class EachPlayer : MonoBehaviour
 
     public Material charMaterial;
     bool boomEnd = false;
-    (Vector2Int, char) items;
+    List<(Vector2Int, char)> items = new List<(Vector2Int, char)>();
+    List<GameObject> itemsObject = new List<GameObject>();
+
+    List<GameObject> portalsObject = new List<GameObject>();
+    Dictionary<Vector2Int, Vector2Int> portalsPos = new Dictionary<Vector2Int, Vector2Int>();
+    bool isWarped = false;
 
 
 
@@ -286,6 +291,8 @@ public class EachPlayer : MonoBehaviour
 
         this.transform.localPosition = mazePos + vibPos;
 
+        Vector2Int oldPos = nowCharaPos;
+
         if (isPlayable)
         { 
             if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -299,6 +306,7 @@ public class EachPlayer : MonoBehaviour
                     fieldPassReload(nowCharaPos.x, nowCharaPos.y - 1);
 
                     nowCharaPos += new Vector2Int(0, -1);
+                    isWarped = false;
                 }
                 else
                 {
@@ -320,6 +328,7 @@ public class EachPlayer : MonoBehaviour
                     fieldPassReload(nowCharaPos.x, nowCharaPos.y);
                     fieldPassReload(nowCharaPos.x, nowCharaPos.y + 1);
                     nowCharaPos += new Vector2Int(0, 1);
+                    isWarped = false;
                 }
                 else
                 {
@@ -340,6 +349,7 @@ public class EachPlayer : MonoBehaviour
                     fieldPassReload(nowCharaPos.x, nowCharaPos.y);
                     fieldPassReload(nowCharaPos.x - 1, nowCharaPos.y);
                     nowCharaPos += new Vector2Int(-1, 0);
+                    isWarped = false;
                 }
                 else
                 {
@@ -361,6 +371,7 @@ public class EachPlayer : MonoBehaviour
                     fieldPassReload(nowCharaPos.x, nowCharaPos.y);
                     fieldPassReload(nowCharaPos.x + 1, nowCharaPos.y);
                     nowCharaPos += new Vector2Int(1, 0);
+                    isWarped = false;
                 }
                 else
                 {
@@ -378,9 +389,52 @@ public class EachPlayer : MonoBehaviour
 
         //chara.transform.localPosition = new Vector3(nowCharaPos.y * fieldWidth, -nowCharaPos.x * fieldHeight);
         //chara.transform.localRotation = Quaternion.Euler(rotX, 90f, rotZ);
+        Vector2Int newDes;
+        if(!isWarped && portalsPos.TryGetValue(nowCharaPos, out newDes))
+        {
+            if(newDes != oldPos)
+            {
+                nowCharaPos = newDes;
+                isWarped = true;
+            }
+        }
 
         chara.transform.localPosition = Vector3.Lerp(chara.transform.localPosition, new Vector3(nowCharaPos.y * fieldWidth, -nowCharaPos.x * fieldHeight), Time.deltaTime * speed);
         chara.transform.localRotation = Quaternion.Lerp(chara.transform.localRotation, Quaternion.Euler(rotX, 90f, rotZ), Time.deltaTime * speed);
+        
+        foreach(GameObject por in portalsObject)
+        {
+            por.transform.localRotation = Quaternion.Lerp(por.transform.localRotation, Quaternion.Euler(0f, 0f, rotZ), Time.deltaTime * speed);
+        }
+
+        int pickItem = -1;
+        for(int i=0;i<items.Count;i++)
+        {
+            if (items[i].Item1 == nowCharaPos)
+            {
+                pickItem = i;
+                break;
+            }
+        }
+
+        if (pickItem != -1)
+        {
+            switch (items[pickItem].Item2)
+            {
+                case 'W':
+                    itemDoWarp(items[pickItem].Item1);
+                    break;
+                case 'M':
+                    itemDoMag(items[pickItem].Item1);
+                    break;
+                case 'B':
+                    itemDoBomb();
+                    break;
+            }
+            Destroy(itemsObject[pickItem]);
+            items.RemoveAt(pickItem);
+            itemsObject.RemoveAt(pickItem);
+        }
 
         if (nowCharaPos.x == bigPMaze.getEnd().x && nowCharaPos.y == bigPMaze.getEnd().y && !boomEnd)
         {
@@ -393,6 +447,214 @@ public class EachPlayer : MonoBehaviour
 
     public void doAddItem()
     {
+        if(bigPMaze == null)
+        {
+            if (player == 1)
+            {
+                bigPMaze = GameDataManager.player1Maze;
+            }
+            else
+            {
+                bigPMaze = GameDataManager.player2Maze;
+                
+            }
+        }
+        bigPMaze.getDifficultyMaze();
+
+
+        if (bigPMaze.playableList.Count >= 2)
+        {
+            int itemType = Random.Range(0, 3);
+            char[] it = new char[] { 'B', 'W', 'M' };
+            Vector2Int pos = bigPMaze.playableList[bigPMaze.playableList.Count - 1];
+            bigPMaze.playableList.RemoveAt(bigPMaze.playableList.Count - 1);
+
+            items.Add((pos, it[itemType]));
+            int gameInd = itemsObject.Count;
+            itemsObject.Add(new GameObject(string.Format("ItemP{0}#{1}",player, (gameInd + 1).ToString())));
+            
+            itemsObject[gameInd].transform.parent = this.transform;
+            itemsObject[gameInd].transform.localScale = new Vector3(0.8f,0.8f,0.8f);
+            itemsObject[gameInd].transform.localPosition = new Vector3(pos.y, - pos.x);
+            itemsObject[gameInd].AddComponent<SpriteRenderer>();
+            itemsObject[gameInd].GetComponent<SpriteRenderer>().sprite =
+                Resources.Load<Sprite>("Texture/Icons/Item" + it[itemType]);
+            itemsObject[gameInd].GetComponent<SpriteRenderer>().color = mainColor;
+            itemsObject[gameInd].GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
+        }
+    }
+
+    public void itemDoMag(Vector2Int pos)
+    {
+        Debug.Log(string.Format("DO MAG at {0},{1}", pos.x, pos.y));
+        StartCoroutine(magLittleAnimation(pos));
+    }
+
+    public void magDoLittleWall(Vector2Int pos)
+    {
+       
+        if (bigPMaze.isPass(pos.x, pos.y, 'L'))
+        {
+            fieldCanWalked[pos.x, pos.y] |= 8;
+            fieldPassReload(pos.x, pos.y);
+        }
+        else
+        {
+            if (seenWalls.isPass(pos.x, pos.y, 'L'))
+            {
+                seenWalls.toggleWall(pos.x, pos.y, 'L');
+            }
+        }
+
+        if (bigPMaze.isPass(pos.x, pos.y, 'R'))
+        {
+            fieldCanWalked[pos.x, pos.y] |= 2;
+            fieldPassReload(pos.x, pos.y);
+        }
+        else
+        {
+            if (seenWalls.isPass(pos.x, pos.y, 'R'))
+            {
+                seenWalls.toggleWall(pos.x, pos.y, 'R');
+            }
+        }
+        if (bigPMaze.isPass(pos.x, pos.y, 'U'))
+        {
+            fieldCanWalked[pos.x, pos.y] |= 1;
+            fieldPassReload(pos.x, pos.y);
+        }
+        else
+        {
+            if (seenWalls.isPass(pos.x, pos.y, 'U'))
+            {
+                seenWalls.toggleWall(pos.x, pos.y, 'U');
+            }
+        }
+
+        if (bigPMaze.isPass(pos.x, pos.y, 'D'))
+        {
+            fieldCanWalked[pos.x, pos.y] |= 4;
+            fieldPassReload(pos.x, pos.y);
+        }
+        else
+        {
+            if (seenWalls.isPass(pos.x, pos.y, 'D'))
+            {
+                seenWalls.toggleWall(pos.x, pos.y, 'D');
+            }
+        }
+    }
+
+    IEnumerator magLittleAnimation(Vector2Int pos)
+    {
+        Vector2Int[] littleOrder = new Vector2Int[] {
+            new Vector2Int(0,0),
+            new Vector2Int(-1,0),
+            new Vector2Int(0,1),
+            new Vector2Int(1,0),
+            new Vector2Int(0,-1),
+            new Vector2Int(-1,-1),
+            new Vector2Int(-1,1),
+            new Vector2Int(1,-1),
+            new Vector2Int(1,1)
+        };
+
+        GameObject mag = new GameObject("Mag");
+        mag.transform.parent = this.transform;
+        mag.AddComponent<SpriteRenderer>();
+        mag.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/MagGlass");
+        mag.GetComponent<SpriteRenderer>().sortingLayerName = "ItemEffect";
+        mag.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+
+        foreach (Vector2Int d in littleOrder)
+        {
+            Vector2Int comPos = pos + d;
+            if (bigPMaze.isPosInMaze(comPos))
+            {
+                mag.transform.localPosition = new Vector3(comPos.y + 0.59f, -comPos.x - 0.66f);
+                magDoLittleWall(comPos);
+                reloadWalls();
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+        Destroy(mag);
+    }
+
+    public void itemDoBomb()
+    {
+        Vector2Int bomPos = new Vector2Int(Random.Range(0, rowMaze), Random.Range(0, columnMaze));
+
+        StartCoroutine(waitAndDestroy(Instantiate(bigControl.Booooom), bomPos));
+        vib = 0.2f;
+        doLittleBomb(bomPos);
+        if (bigPMaze.isPosInMaze(bomPos + new Vector2Int(1, 0))) doLittleBomb(bomPos + new Vector2Int(1, 0));
+        if (bigPMaze.isPosInMaze(bomPos + new Vector2Int(-1, 0))) doLittleBomb(bomPos + new Vector2Int(-1, 0));
+        if (bigPMaze.isPosInMaze(bomPos + new Vector2Int(0, 1))) doLittleBomb(bomPos + new Vector2Int(0, 1));
+        if (bigPMaze.isPosInMaze(bomPos + new Vector2Int(0, -1))) doLittleBomb(bomPos + new Vector2Int(0, -1));
+        reloadWalls();
+    }
+
+    IEnumerator waitAndDestroy(GameObject boomFx, Vector2Int bompos)
+    {
+        boomFx.transform.parent = this.transform;
+        boomFx.transform.localScale = new Vector3(1f, 1f, 1f);
+        boomFx.transform.localPosition = new Vector3(bompos.y, -bompos.x);
+        yield return new WaitForSeconds(1.7f);
+        Destroy(boomFx);
+    }
+
+    public void doLittleBomb(Vector2Int pos)
+    {
+        fieldCanWalked[pos.x, pos.y] = 1+2+4+8;
+        fieldPassReload(pos.x, pos.y);
+
+        if (!bigPMaze.isPass(pos.x, pos.y, 'L'))
+        {
+            bigPMaze.toggleWall(pos.x, pos.y, 'L');
+        }
+        if (!bigPMaze.isPass(pos.x, pos.y, 'R'))
+        {
+            bigPMaze.toggleWall(pos.x, pos.y, 'R');
+        }
+        if (!bigPMaze.isPass(pos.x, pos.y, 'U'))
+        {
+            bigPMaze.toggleWall(pos.x, pos.y, 'U');
+        }
+        if (!bigPMaze.isPass(pos.x, pos.y, 'D'))
+        {
+            bigPMaze.toggleWall(pos.x, pos.y, 'D');
+        }
+    }
+
+    public void itemDoWarp(Vector2Int pos)
+    {
+        Debug.Log("Fucked" + bigPMaze.playableList.Count);
+        Debug.Log("Called" + (bigPMaze.playableList.Count - 1));
+        Vector2Int Des = bigPMaze.playableList[bigPMaze.playableList.Count - 1];
+        bigPMaze.playableList.RemoveAt(bigPMaze.playableList.Count - 1);
+        portalsPos.Add(pos, Des);
+        portalsPos.Add(Des, pos);
+
+        Color thisWarpColor = Random.ColorHSV(0f, 1f, 0.5f, 0.5f, 1f, 1f,1f,1f);
+        int wind = portalsObject.Count;
+        portalsObject.Add(new GameObject("Portal" + wind + "A"));
+        portalsObject[wind].transform.parent = this.transform;
+        portalsObject[wind].AddComponent<SpriteRenderer>();
+        portalsObject[wind].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Warpu");
+        portalsObject[wind].GetComponent<SpriteRenderer>().sortingLayerName = "ItemEffect";
+        portalsObject[wind].GetComponent<SpriteRenderer>().color = thisWarpColor;
+        portalsObject[wind].transform.localPosition = new Vector3(pos.y,-pos.x);
+        portalsObject[wind].transform.localScale = new Vector3(1f,1f,1f);
+
+        portalsObject.Add(new GameObject("Portal" + wind + "B"));
+        portalsObject[wind + 1].transform.parent = this.transform;
+        portalsObject[wind + 1].AddComponent<SpriteRenderer>();
+        portalsObject[wind + 1].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Warpu");
+        portalsObject[wind + 1].GetComponent<SpriteRenderer>().sortingLayerName = "ItemEffect";
+        portalsObject[wind + 1].GetComponent<SpriteRenderer>().color = thisWarpColor;
+        portalsObject[wind + 1].transform.localPosition = new Vector3(Des.y, -Des.x);
+        portalsObject[wind + 1].transform.localScale = new Vector3(1f, 1f, 1f);
 
     }
+
 }

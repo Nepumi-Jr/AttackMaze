@@ -4,6 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Shootable
   - ReloadLang
   layers:
   - Default
@@ -14,9 +15,9 @@ TagManager:
   - UI
   - 
   - 
-  - BG
-  - PostPro
-  - 
+  - Lighting
+  - Ground
+  - Postprocessing
   - 
   - 
   - 
@@ -43,11 +44,17 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: MazeBG
-    uniqueID: 3757874937
+    uniqueID: 2149177119
     locked: 0
   - name: MazeBorder
-    uniqueID: 2051067605
+    uniqueID: 1811843013
     locked: 0
   - name: MazeFlag
-    uniqueID: 1491495513
+    uniqueID: 3500063491
+    locked: 0
+  - name: ItemEffect
+    uniqueID: 658742575
+    locked: 0
+  - name: Fire
+    uniqueID: 3804908061
     locked: 0

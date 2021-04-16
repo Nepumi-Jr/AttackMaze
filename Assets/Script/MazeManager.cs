@@ -14,6 +14,7 @@ public class MazeManager
     private Vector2Int posEnd;
 
     public bool[,] playable;
+    public List<Vector2Int> playableList = new List<Vector2Int>();
 
     private void initMaze()
     {
@@ -87,6 +88,7 @@ public class MazeManager
 
     public bool isPosInMaze(Vector2Int pos)
     {
+        if (pos == null) return false;
         if (pos.x < 0 || pos.x >= gridRow)
         {
             return false;
@@ -263,6 +265,8 @@ public class MazeManager
             {
                 playable[nowRow, nowColumn - 1] = true;
                 quea.Enqueue((nowRow, nowColumn - 1));
+                if (new Vector2Int(nowRow, nowColumn - 1) != posStart && new Vector2Int(nowRow, nowColumn - 1) != posEnd)
+                    playableList.Add(new Vector2Int(nowRow, nowColumn - 1));
             }
 
             //right side
@@ -270,6 +274,8 @@ public class MazeManager
             {
                 playable[nowRow, nowColumn + 1] = true;
                 quea.Enqueue((nowRow, nowColumn + 1));
+                if (new Vector2Int(nowRow , nowColumn+1) != posStart && new Vector2Int(nowRow , nowColumn + 1) != posEnd)
+                    playableList.Add(new Vector2Int(nowRow, nowColumn + 1));
             }
 
             //Up side
@@ -277,6 +283,8 @@ public class MazeManager
             {
                 playable[nowRow - 1, nowColumn] = true;
                 quea.Enqueue((nowRow - 1, nowColumn));
+                if (new Vector2Int(nowRow - 1, nowColumn) != posStart && new Vector2Int(nowRow - 1, nowColumn) != posEnd)
+                    playableList.Add(new Vector2Int(nowRow - 1, nowColumn));
             }
 
             //right side
@@ -284,7 +292,18 @@ public class MazeManager
             {
                 playable[nowRow + 1, nowColumn] = true;
                 quea.Enqueue((nowRow + 1, nowColumn));
+                if(new Vector2Int(nowRow + 1, nowColumn) != posStart && new Vector2Int(nowRow + 1, nowColumn) != posEnd)
+                    playableList.Add(new Vector2Int(nowRow + 1, nowColumn));
             }
+        }
+
+        //Shuffle playableList
+        for(int i = 0; i < (int)(playableList.Count * 10f); i++) {
+            int ind = Random.Range(0, playableList.Count);
+            int dind = Random.Range(0, playableList.Count);
+            Vector2Int temp = playableList[ind];
+            playableList[ind] = playableList[dind];
+            playableList[dind] = temp;
         }
 
 

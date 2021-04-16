@@ -9,12 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 87869176ca752314a8f051540bb31bc2
   - enabled: 1
-    path: Assets/Scenes/SolveMaze.unity
-    guid: 7d3908df29ee4624ca1e354870f76829
+    path: Assets/Scenes/ContructMaze.unity
+    guid: d6b68006fca3c9840aa91c62e96351cc
   - enabled: 1
     path: Assets/Scenes/Loading.unity
     guid: e93b9449e1f650c44acfc75eb4d4b1ba
   - enabled: 1
-    path: Assets/Scenes/ContructMaze.unity
-    guid: d6b68006fca3c9840aa91c62e96351cc
+    path: Assets/Scenes/SolveMaze.unity
+    guid: 7d3908df29ee4624ca1e354870f76829
   m_configObjects: {}

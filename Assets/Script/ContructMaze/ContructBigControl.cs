@@ -169,7 +169,7 @@ public class ContructBigControl : MonoBehaviour
         staObject = new GameObject("STA");
         staObject.transform.parent = bigMaze;
         staObject.AddComponent<SpriteRenderer>();
-        staObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish");
+        staObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/Icons/Start");
         staObject.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
 
         reloadStartEnd();
@@ -561,9 +561,10 @@ public class ContructBigControl : MonoBehaviour
             fadeDuration = 0.1f
         };
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < toolsButtons.Length; i++)
         {
-            toolsButtons[i].colors = notSe;
+            if(toolsButtons[i] != null)
+                toolsButtons[i].colors = notSe;
         }
         toolsButtons[id].colors = Se;
 

@@ -46,10 +46,13 @@ public class SolveMazeBigControl : MonoBehaviour
 
     public AudioClip VicIntro;
     public AudioClip VicLoop;
+    public GameObject Booooom;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        
 
         Bgm.fadeVolume(0.4f);
         Bgm.startPlaying();
@@ -73,6 +76,15 @@ public class SolveMazeBigControl : MonoBehaviour
             curTurn = 1;
         }
 
+
+
+        //TEST
+        p1Field.doAddItem();
+        p1Field.doAddItem();
+        p1Field.doAddItem();
+        p2Field.doAddItem();
+        p2Field.doAddItem();
+        p2Field.doAddItem();
 
 
         ReloadText();

@@ -23,6 +23,9 @@ public class MenuCallingAndListener : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        Random.InitState(Mathf.Abs((int)System.DateTime.Now.Ticks));
+
         SettingData.loadSetting();
 
         VRes.value = SettingData.resolutionIndex;
