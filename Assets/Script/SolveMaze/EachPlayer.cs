@@ -65,11 +65,11 @@ public class EachPlayer : MonoBehaviour
         
         if (player == 1)
         {
-            bigPMaze = GameDataManager.player1Maze;
+            bigPMaze = GameDataManager.player2Maze;
         }
         else
         {
-            bigPMaze = GameDataManager.player2Maze;
+            bigPMaze = GameDataManager.player1Maze;
         }
 
         seenWalls = new MazeManager(rowMaze, columnMaze);
@@ -394,6 +394,7 @@ public class EachPlayer : MonoBehaviour
         {
             if(newDes != oldPos)
             {
+                bigControl.sfxManager.playSfx("GoWarp");
                 nowCharaPos = newDes;
                 isWarped = true;
             }
@@ -486,7 +487,8 @@ public class EachPlayer : MonoBehaviour
 
     public void itemDoMag(Vector2Int pos)
     {
-        Debug.Log(string.Format("DO MAG at {0},{1}", pos.x, pos.y));
+        bigControl.sfxManager.playSfx("Mag");
+        bigControl.sfxManager.playSfx("PickItem");
         StartCoroutine(magLittleAnimation(pos));
     }
 
@@ -582,6 +584,8 @@ public class EachPlayer : MonoBehaviour
 
     public void itemDoBomb()
     {
+        bigControl.sfxManager.playSfx("Bomb");
+        bigControl.sfxManager.playSfx("PickItem");
         Vector2Int bomPos = new Vector2Int(Random.Range(0, rowMaze), Random.Range(0, columnMaze));
 
         StartCoroutine(waitAndDestroy(Instantiate(bigControl.Booooom), bomPos));
@@ -628,8 +632,8 @@ public class EachPlayer : MonoBehaviour
 
     public void itemDoWarp(Vector2Int pos)
     {
-        Debug.Log("Fucked" + bigPMaze.playableList.Count);
-        Debug.Log("Called" + (bigPMaze.playableList.Count - 1));
+        bigControl.sfxManager.playSfx("Warp");
+        bigControl.sfxManager.playSfx("PickItem");
         Vector2Int Des = bigPMaze.playableList[bigPMaze.playableList.Count - 1];
         bigPMaze.playableList.RemoveAt(bigPMaze.playableList.Count - 1);
         portalsPos.Add(pos, Des);

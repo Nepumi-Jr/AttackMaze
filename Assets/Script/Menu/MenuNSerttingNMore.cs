@@ -11,9 +11,9 @@ public class MenuNSerttingNMore : MonoBehaviour
     public GameObject AudioPanel;
     public GameObject ContiPanel;
     public GameObject NewGamePanel;
-    //TODO : new Game
     public BGMManager BGM;
     bool ff = false;
+    public GameObject fader;
 
     // Start is called before the first frame update
     private void Update()
@@ -66,18 +66,25 @@ public class MenuNSerttingNMore : MonoBehaviour
         BGM.fadeVolume(0f, 20f);
         if (GameDataManager.getPhase() == "Solving")
         {
-            ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.SolveMaze);
+            StartCoroutine(startTran(ScreenLoadManager.Scene.SolveMaze));
         }
         else
         {
-            ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.ContructMaze);
+            StartCoroutine(startTran(ScreenLoadManager.Scene.ContructMaze));
         }
     }
 
     public void gameNew()
     {
         BGM.fadeVolume(0f, 20f);
-        ScreenLoadManager.loadNextScreen(ScreenLoadManager.Scene.ContructMaze);
+        StartCoroutine(startTran(ScreenLoadManager.Scene.ContructMaze));
+    }
+
+    IEnumerator startTran(ScreenLoadManager.Scene x)
+    {
+        fader.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        ScreenLoadManager.loadNextScreen(x);
     }
 
     public void ExitGame()

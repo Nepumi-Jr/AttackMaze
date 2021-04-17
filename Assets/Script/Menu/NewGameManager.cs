@@ -13,8 +13,10 @@ public class NewGameManager : MonoBehaviour
     public Color hover;
     public Color Selected;
     int selectedSize = 0;
-    bool isItemAss;
+    bool isItemAss = true;
     MenuNSerttingNMore mm;
+    
+
 
     // Start is called before the first frame update
     void Start()
@@ -70,4 +72,6 @@ public class NewGameManager : MonoBehaviour
         GameDataManager.saveGame();
         mm.gameNew();
     }
+
+
 }

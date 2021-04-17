@@ -47,6 +47,7 @@ public class SolveMazeBigControl : MonoBehaviour
     public AudioClip VicIntro;
     public AudioClip VicLoop;
     public GameObject Booooom;
+    public SfxList sfxManager;
 
     // Start is called before the first frame update
     void Start()
@@ -69,23 +70,47 @@ public class SolveMazeBigControl : MonoBehaviour
 
         if (GameDataManager.player1Maze.getDifficultyMaze() < GameDataManager.player2Maze.getDifficultyMaze())
         {
-            curTurn = 2;
+            curTurn = 1;
         }
         else
         {
-            curTurn = 1;
+            curTurn = 2;
         }
 
-
-
-        //TEST
-        p1Field.doAddItem();
-        p1Field.doAddItem();
-        p1Field.doAddItem();
-        p2Field.doAddItem();
-        p2Field.doAddItem();
-        p2Field.doAddItem();
-
+        if (GameDataManager.itemAss)
+        {
+            int P1Item = Random.Range(0, 2);
+            int P2Item = Random.Range(0, 2);
+            int delta = (int) (Mathf.Abs(GameDataManager.player1Maze.getDifficultyMaze() - GameDataManager.player2Maze.getDifficultyMaze()) / 7f);
+            
+            if(delta == 0)
+            {
+                P2Item += Random.Range(0, 2);
+                P1Item += Random.Range(0, 2);
+            }
+            else
+            {
+                if (curTurn == 1)
+                {
+                    P1Item += delta;
+                    P2Item += Random.Range(0, 2);
+                }
+                else
+                {
+                    P2Item += delta;
+                    P1Item += Random.Range(0, 2);
+                }
+            }
+            
+            for (int i = 0; i < P1Item; i++)
+            {
+                p1Field.doAddItem();
+            }
+            for (int i = 0; i < P2Item; i++)
+            {
+                p2Field.doAddItem();
+            }
+        }
 
         ReloadText();
         rePosition();
@@ -128,7 +153,7 @@ public class SolveMazeBigControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) && endGame && !backToMenu)
         {
-
+            sfxManager.playSfx("Start");
             GameDataManager.ResetIt();
             Bgm.fadeVolume(0f, 2f);
 
@@ -138,11 +163,13 @@ public class SolveMazeBigControl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) && !endGame && !duringTransit)
         {
+            sfxManager.playSfx("Click");
             thisPause.callPause();
         }
 
         if (Input.GetKeyDown(KeyCode.Return) && waitForPlayer && !thisPause.isPause)
         {
+            sfxManager.playSfx("Start");
             waitForPlayer = false;
             Bgm.fadeVolume(1f);
 
@@ -172,7 +199,6 @@ public class SolveMazeBigControl : MonoBehaviour
             {
                 timeText.text = "000";
                 timeOut();
-                
             }
         }
 
@@ -189,6 +215,7 @@ public class SolveMazeBigControl : MonoBehaviour
     {
         if (!duringTransit)
         {
+            sfxManager.playSfx("WallHit");
             duringTransit = true;
             p1Field.isPlayable = false;
             p2Field.isPlayable = false;
@@ -203,6 +230,7 @@ public class SolveMazeBigControl : MonoBehaviour
     {
         if (!duringTransit)
         {
+            sfxManager.playSfx("WallHit");
             duringTransit = true;
             p1Field.isPlayable = false;
             p2Field.isPlayable = false;

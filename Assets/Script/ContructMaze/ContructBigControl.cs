@@ -63,6 +63,7 @@ public class ContructBigControl : MonoBehaviour
     public Button subButton;
     public BGMManager mainBGM;
     public float lightWallOpa;
+    public SfxList sfxManager;
 
     Vector3 posMazeToV3(float row, float column)
     {
@@ -193,6 +194,7 @@ public class ContructBigControl : MonoBehaviour
                     mainBGM.startPlaying();
                     phase = 1;
                     animations.SetTrigger("WarnEnter");
+                    sfxManager.playSfx("Start");
                     StartCoroutine(inActiveThem());
                 }
                 if (phase == 2)
@@ -200,17 +202,20 @@ public class ContructBigControl : MonoBehaviour
                     mainBGM.fadeVolume(0f, 1.2f);
                     phase = 3;
                     animations.SetTrigger("Proceed");
-                    
+                    sfxManager.playSfx("Start");
+
                     StartCoroutine(nextBruh());
                 }
             }
             if (Input.GetKeyDown(KeyCode.Escape) && phase == 1)
             {
+                sfxManager.playSfx("Click");
                 pauseBruh.callPause();
             }
             if (Input.GetKeyDown(KeyCode.Escape) && phase == 2)
             {
                 animations.SetTrigger("BackEdit");
+                sfxManager.playSfx("Click");
                 mazeButtonsPanel.SetActive(true);
                 StartCoroutine(waitTran(1f));
                 phase = 1;
@@ -268,6 +273,7 @@ public class ContructBigControl : MonoBehaviour
                         {
                             if((tool == 1 && !thisMaze.isPass(tr, tc, result.Item3)) || tool == 0)
                             {
+                                sfxManager.playSfx("WallPlace");
                                 thisMaze.toggleWall(tr, tc, result.Item3);
                                 reloadWalls();
                             }
@@ -285,7 +291,8 @@ public class ContructBigControl : MonoBehaviour
                 {
                     if(tool == 2)
                     {
-                        if(thisMaze.getEnd().x == tr && thisMaze.getEnd().y == tc)
+                        sfxManager.playSfx("WallPlace");
+                        if (thisMaze.getEnd().x == tr && thisMaze.getEnd().y == tc)
                         {
                             thisMaze.setEnd(-1, -1);
                         }
@@ -293,6 +300,7 @@ public class ContructBigControl : MonoBehaviour
                     }
                     else
                     {
+                        sfxManager.playSfx("WallPlace");
                         if (thisMaze.getStart().x == tr && thisMaze.getStart().y == tc)
                         {
                             thisMaze.setStart(-1, -1);
@@ -509,8 +517,9 @@ public class ContructBigControl : MonoBehaviour
     public void subMaze()
     {
         //Calculate maze here
-        if (true)
+        if (thisMaze.getDifficultyMaze() >= 0f)
         {
+            sfxManager.playSfx("Click");
             mazeButtonsPanel.SetActive(false);
             mainBGM.fadeVolume(0.6f, 1.2f);
 
@@ -526,6 +535,7 @@ public class ContructBigControl : MonoBehaviour
 
     public void resetMaze()
     {
+        sfxManager.playSfx("Click");
         thisMaze.reMaze();
         reloadWalls();
         reloadStartEnd();
