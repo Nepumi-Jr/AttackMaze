@@ -30,6 +30,9 @@ Back to main
 [MPlay]//Menu
 Play
 
+[MHow]//Menu
+How to play
+
 [MSetting]
 Setting
 
@@ -100,6 +103,55 @@ Maze size
 [MNitem]
 Item Assist
 
+[MTHow]
+How to play
+
+[MTMAtt]//1
+What is it?
+
+[MTDAtt]
+Attack maze is a local 2 player competition game that all of the two-player will take a turn to create their own unique maze and try to solve opponents's invisible maze. The one who solves first is the winner!
+
+
+[MTMCon]//2
+Construct maze...
+
+[MTDCon]
+To construct a maze, use the mouse to point and left-click to build and click again to remove a wall.
+Don't forget to set the Start and End tiles.
+After construct hit submits button to submit.
+
+[MTMCon2]//3
+Construct maze...(warning)
+
+[MTDCon2]
+when one is constructing a maze. The other one mustn't look at the maze for a fair game.
+
+[MTMSol]//4
+Solve maze...
+
+[MTDSol]
+To solve the maze, use Arrow keys to control the little spin arrow.
+The maze will invisible so try your best to not hit a wall.
+if you hit the wall, the game will switch turn to solve.
+The one who solves first is the winner!
+
+[MTMItem]//5
+Solve maze (item)
+
+[MTDItem]
+If item assist is enabled, you will see some items lay on the maze.
+There are 3 of them.
+Bomb will blow up someplace in a maze.
+Magnifying will make you know information around where you at.
+Warp will create two portals. you can use as many as you want
+
+
+[MTuPre]//TUTORIAL
+<- previous
+
+[MTuNex]
+next ->
 
 [CDisc]// Contruct phase goes here
 Disclaimer

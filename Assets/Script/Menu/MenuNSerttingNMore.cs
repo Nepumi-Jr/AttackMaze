@@ -11,6 +11,7 @@ public class MenuNSerttingNMore : MonoBehaviour
     public GameObject AudioPanel;
     public GameObject ContiPanel;
     public GameObject NewGamePanel;
+    public GameObject HowtoPlay;
     public BGMManager BGM;
     bool ff = false;
     public GameObject fader;
@@ -33,8 +34,9 @@ public class MenuNSerttingNMore : MonoBehaviour
         VideoPanel.SetActive(screen == "VideoPanel");
         AudioPanel.SetActive(screen == "AudioPanel");
         NewGamePanel.SetActive(screen == "NewGamePanel");
+        HowtoPlay.SetActive(screen == "HowToPlay");
         ContiPanel.SetActive(false);
-        BGM.fadeVolume((screen == "SettingPanel" || screen == "VideoPanel") ? 0.6f : 1f, 2f);
+        BGM.fadeVolume((screen == "SettingPanel" || screen == "VideoPanel" || screen == "HowToPlay") ? 0.6f : 1f, 2f);
     }
 
     public void openUpTheSky()
@@ -86,6 +88,7 @@ public class MenuNSerttingNMore : MonoBehaviour
         yield return new WaitForSeconds(2f);
         ScreenLoadManager.loadNextScreen(x);
     }
+
 
     public void ExitGame()
     {
