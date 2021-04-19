@@ -142,9 +142,9 @@ Solve maze (item)
 [MTDItem]
 If item assist is enabled, you will see some items lay on the maze.
 There are 3 of them.
-Bomb will blow up someplace in a maze.
-Magnifying will make you know information around where you at.
-Warp will create two portals. you can use as many as you want
+-[Bomb] will blow up someplace in a maze.
+-[Magnifying] will make you know information around where you at.
+-[Warp] will create two portals. you can use as many as you want
 
 
 [MTuPre]//TUTORIAL

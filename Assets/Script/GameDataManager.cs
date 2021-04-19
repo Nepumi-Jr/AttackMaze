@@ -11,6 +11,7 @@ public class GameDataManager
     protected static string timeStamp;
     protected static string phase;
     public static bool itemAss;
+    public static bool isDebuging;
 
     static bool isLoaded = false;
 
@@ -62,6 +63,14 @@ public class GameDataManager
         phase = content[2].Replace("phase:", "");
         timeStamp = content[3].Replace("Last seen:", "");
         itemAss = content[4] == "Item:1";
+
+        if(content.Length == 6)
+        {
+            if(content[5] == "BugFordNaHee")
+            {
+                isDebuging = true;
+            }
+        }
 
     }
 
