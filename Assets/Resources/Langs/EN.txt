@@ -16,7 +16,6 @@ P2 Construct
 [PSolving]
 Solve
 
-
 [PaTitle]//Pause Stuff
 Pause
 
@@ -25,7 +24,6 @@ Continue
 
 [PaBack]
 Back to main
-
 
 [MPlay]//Menu
 Play
@@ -112,14 +110,13 @@ What is it?
 [MTDAtt]
 Attack maze is a local 2 player competition game that all of the two-player will take a turn to create their own unique maze and try to solve opponents's invisible maze. The one who solves first is the winner!
 
-
 [MTMCon]//2
 Construct maze...
 
 [MTDCon]
 To construct a maze, use the mouse to point and left-click to build and click again to remove a wall.
 Don't forget to set the Start and End tiles.
-After construct hit submits button to submit.
+After construct press submits button to submit.
 
 [MTMCon2]//3
 Construct maze...(warning)
@@ -131,7 +128,7 @@ when one is constructing a maze. The other one mustn't look at the maze for a fa
 Solve maze...
 
 [MTDSol]
-To solve the maze, use Arrow keys to control the little spin arrow.
+To solve the maze, use Arrow keys to control the little spinning arrow.
 The maze will invisible so try your best to not hit a wall.
 if you hit the wall, the game will switch turn to solve.
 The one who solves first is the winner!
@@ -141,10 +138,9 @@ Solve maze (item)
 
 [MTDItem]
 If item assist is enabled, you will see some items lay on the maze.
-There are 3 of them.
 -[Bomb] will blow up someplace in a maze.
--[Magnifying] will make you know information around where you at.
--[Warp] will create two portals. you can use as many as you want
+-[Magnifying] will make you see the wall around you.
+-[Warp] will create two portals. you can use to teleport as many as you want.
 
 
 [MTuPre]//TUTORIAL
@@ -201,14 +197,11 @@ Unsolvable maze
 [CDDiff]
 Difficulty : {0}
 
-
-
 [SPSolve] // solve phase goes here
 P{0}'s Solve
 
 [SPTurn]
 P{0}'s Turn
-
 
 [SPEnter]
 Press enter to continue
