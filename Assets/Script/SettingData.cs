@@ -106,13 +106,13 @@ public class SettingData
         saveSetting();
     }
 
-    public static void applySound()
+    public static void applySound(bool isSave = true)
     {
         AudioMixer audioMixer = Resources.Load<AudioMixer>("MainAudioMixer");
         audioMixer.SetFloat("Master", (Mathf.Pow(40, (1f - masterVolume) - 1f) * (-80)));
         audioMixer.SetFloat("Music", (Mathf.Pow(40, (1f - musicVolume) - 1f) * (-80)));
         audioMixer.SetFloat("SFX", (Mathf.Pow(40, (1f - soundVolume) - 1f) * (-80)));
-        saveSetting();
+        if(isSave) saveSetting();
     }
 
     public static void nextLang()
