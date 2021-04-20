@@ -84,7 +84,7 @@ public class EachPlayer : MonoBehaviour
 
         finishFlag = new GameObject(string.Format("FL{0}", player));
         finishFlag.AddComponent<SpriteRenderer>();
-        finishFlag.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish");
+        finishFlag.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish1");
         finishFlag.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
         finishFlag.transform.parent = this.transform;
         finishFlag.transform.localPosition = new Vector3(

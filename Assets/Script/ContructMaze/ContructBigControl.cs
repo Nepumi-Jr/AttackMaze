@@ -164,7 +164,7 @@ public class ContructBigControl : MonoBehaviour
         flgObject = new GameObject("FLG");
         flgObject.transform.parent = bigMaze;
         flgObject.AddComponent<SpriteRenderer>();
-        flgObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish");
+        flgObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Texture/MazeField/Finish1");
         flgObject.GetComponent<SpriteRenderer>().sortingLayerName = "MazeFlag";
 
         staObject = new GameObject("STA");
