@@ -5,7 +5,7 @@ Academic year : 2020
 
 ## Member contribution
 * Peeraphol Sudputong : Game backend, music composer
-* Tanapat Chokruamchai : Langmanager, Game frontend, Game director
+* Tanapat Chokruamchai : Language manager, Game frontend, Game director
 * Watsharapat Ritthisoonthorn : Game frontend, Grarphic designer
 
 ## The best features of the game
