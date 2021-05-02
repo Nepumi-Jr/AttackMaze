@@ -53,7 +53,6 @@ public class SolveMazeBigControl : MonoBehaviour
     void Start()
     {
 
-        
 
         Bgm.fadeVolume(0.4f);
         Bgm.startPlaying();

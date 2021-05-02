@@ -79,8 +79,7 @@ public class ContructBigControl : MonoBehaviour
         fieldHeight = picBgField.rect.height / picBgField.pixelsPerUnit;
         float wallZoom = picBgField.rect.width;
         wallZoom /= Resources.Load<Sprite>("Texture/MazeField/CornerZ_Line").rect.width;
-        
-        
+
 
         if (GameDataManager.getPhase() == "ConP1")
         {
@@ -598,6 +597,8 @@ public class ContructBigControl : MonoBehaviour
     {
         TextMesh thisTextDiff = DiffText.GetComponent<TextMesh>();
         float diff = thisMaze.getDifficultyMaze();
+
+
         bool isSolve = false;
         if (diff == -1)
         {

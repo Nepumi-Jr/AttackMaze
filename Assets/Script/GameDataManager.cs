@@ -13,15 +13,20 @@ public class GameDataManager
     public static bool itemAss;
     public static bool isDebuging;
 
+    static bool ff = false;
+
     static bool isLoaded = false;
 
     public static void init()
     {
-        player1Maze = new MazeManager(5, 5);
-        player2Maze = new MazeManager(5, 5);
-        phase = "ConP1";
-        timeStamp = new DateTimeOffset(DateTime.Now).ToString();
-        itemAss = false;
+        if (phase == "ConP1")
+        {
+            player1Maze = new MazeManager(5, 5);
+            player2Maze = new MazeManager(5, 5);
+            phase = "ConP1";
+            timeStamp = new DateTimeOffset(DateTime.Now).ToString();
+            itemAss = false;
+        }
     }
 
     public GameDataManager()
@@ -40,44 +45,72 @@ public class GameDataManager
         dumping.Add("Last seen:" + timeStamp);
         dumping.Add("Item:" + (itemAss ? "1" : "0"));
 
-        File.WriteAllLines(SAVE_PATH, dumping);
+        try
+        {
+            File.WriteAllLines(SAVE_PATH, dumping);
+        }
+        catch
+        {
+            Debug.LogWarning("Can't Save file...");
+        }
+
+        
     }
 
     public static void loadGame()
     {
+
         string SAVE_PATH = Application.dataPath + "/data.fgm";
-        player1Maze = new MazeManager();
-        player2Maze = new MazeManager();
         isLoaded = true;
 
-        if (!File.Exists(SAVE_PATH))
+        try
         {
-            init();
-            return;
-        }
-
-
-        string[] content = File.ReadAllLines(SAVE_PATH);
-        player1Maze.loadMaze(content[0].Replace("P1 Maze:", ""));
-        player2Maze.loadMaze(content[1].Replace("P2 Maze:", ""));
-        phase = content[2].Replace("phase:", "");
-        timeStamp = content[3].Replace("Last seen:", "");
-        itemAss = content[4] == "Item:1";
-
-        if(content.Length == 6)
-        {
-            if(content[5] == "BugFordNaHee")
+            if (!File.Exists(SAVE_PATH))
             {
-                isDebuging = true;
+                init();
+                return;
+            }
+
+
+            string[] content = File.ReadAllLines(SAVE_PATH);
+            player1Maze.loadMaze(content[0].Replace("P1 Maze:", ""));
+            player2Maze.loadMaze(content[1].Replace("P2 Maze:", ""));
+            phase = content[2].Replace("phase:", "");
+            timeStamp = content[3].Replace("Last seen:", "");
+            itemAss = content[4] == "Item:1";
+
+            if (content.Length == 6)
+            {
+                if (content[5] == "BugFordNaHee")
+                {
+                    isDebuging = true;
+                }
             }
         }
+        catch
+        {
+            init();
+        }
+        
+
+        
 
     }
 
     public static void ResetIt()
     {
         string SAVE_PATH = Application.dataPath + "/data.fgm";
-        File.Delete(SAVE_PATH);
+        try
+        {
+            File.Delete(SAVE_PATH);
+        }
+        catch
+        {
+            phase = "ConP1";
+            init();
+            Debug.LogWarning("Can't Delect data.fgm");
+        }
+        
     }
 
     public static void setPhase(string phasee)

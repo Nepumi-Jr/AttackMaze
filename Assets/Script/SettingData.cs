@@ -29,8 +29,37 @@ public class SettingData
         temp.ls = SettingData.langSelected;
         string jsonContent = JsonUtility.ToJson(temp);
 
+        try
+        {
+            File.WriteAllText(filePath, jsonContent);
+        }
+        catch
+        {
+            Debug.LogWarning("Can't save file :(");
+        }
+        
+    }
 
-        File.WriteAllText(filePath, jsonContent);
+    public static void useDefault()
+    {
+        Resolution[] reses = Screen.resolutions;
+
+        isFullScreen = Screen.fullScreen;
+        resolutionIndex = 0;
+
+        for (int i = 0; i < reses.Length; i++)
+        {
+            if (reses[i].width == Screen.width && reses[i].height == Screen.height
+                && reses[i].refreshRate == Screen.currentResolution.refreshRate)
+            {
+                resolutionIndex = i;
+                break;
+            }
+        }
+
+        graphicQuality = QualitySettings.GetQualityLevel();
+
+        saveSetting();
     }
 
     public static void loadSetting()
@@ -38,9 +67,32 @@ public class SettingData
         
         string filePath = Application.dataPath + "/setting.json";
 
+        try
+        {
+            File.Exists(filePath);
+        }
+        catch
+        {
+            useDefault();
+            applyAll();
+            return;
+        }
+
         if (File.Exists(filePath))
         {
-            string jsonContent = File.ReadAllText(filePath);
+            string jsonContent = "";
+
+            try
+            {
+                jsonContent = File.ReadAllText(filePath);
+            }
+            catch
+            {
+                useDefault();
+                applyAll();
+                return;
+            }
+            
 
             SettingDataForObject holder = JsonUtility.FromJson<SettingDataForObject>(jsonContent);
 
@@ -55,29 +107,10 @@ public class SettingData
         }
         else
         {
+            useDefault();
             //File not found
 
-            Resolution[] reses = Screen.resolutions;
-
-            isFullScreen = Screen.fullScreen;
-            resolutionIndex = 0;
-
-            for (int i = 0; i < reses.Length; i++)
-            {
-                if(reses[i].width == Screen.width && reses[i].height == Screen.height
-                    &&reses[i].refreshRate == Screen.currentResolution.refreshRate)
-                {
-                    resolutionIndex = i;
-                    break;
-                }
-            }
-
-            graphicQuality = QualitySettings.GetQualityLevel();
-
-            saveSetting();
-
         }
-
         
         applyAll();
     }
@@ -101,8 +134,14 @@ public class SettingData
         Resolution[] reses = Screen.resolutions;
 
         QualitySettings.SetQualityLevel(graphicQuality);
-        Screen.SetResolution(reses[resolutionIndex].width, reses[resolutionIndex].height,
+
+        if (reses.Length != 0)
+        {
+            Screen.SetResolution(reses[resolutionIndex].width, reses[resolutionIndex].height,
             isFullScreen);
+        }
+
+        
         saveSetting();
     }
 

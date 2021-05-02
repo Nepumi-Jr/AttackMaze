@@ -28,6 +28,9 @@ public class MenuCallingAndListener : MonoBehaviour
 
         SettingData.loadSetting();
 
+        VRes.interactable = (Screen.resolutions.Length > 0);
+        VFul.setInteractable(Screen.resolutions.Length > 0);
+
         VRes.value = SettingData.resolutionIndex;
         VFul.doSet(SettingData.isFullScreen);
         VQua.value = SettingData.graphicQuality;

@@ -8,6 +8,12 @@ public class FullScreenTick : MonoBehaviour
 
     public Text buttonText;
     bool isPress = false;
+    Button thisButton;
+
+    private void Start()
+    {
+        thisButton = GetComponent<Button>();
+    }
 
     public void Bhit()
     {
@@ -21,5 +27,10 @@ public class FullScreenTick : MonoBehaviour
     {
         isPress = full;
         buttonText.text = (isPress) ? "/" : " ";
+    }
+
+    public void setInteractable(bool interact)
+    {
+        thisButton.interactable = interact;
     }
 }
