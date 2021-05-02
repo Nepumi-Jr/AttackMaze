@@ -20,4 +20,6 @@ Academic year : 2020
 * Glitch and bug *(There are still some glitch and bug that we must solve them ASAP)*
 
 ## Other comments or suggestions
-*\*Nothing\**
+* should change the background color of finish button from red to green or blue *(From AJ.Kanda Saikaew)*
+* graphic can be better *(From AJ.Pattarawit Polpinit)*
+* name of the game *(From AJ.Pattarawit Polpinit)*
